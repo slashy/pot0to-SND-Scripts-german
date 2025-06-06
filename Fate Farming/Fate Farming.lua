@@ -885,7 +885,7 @@ FatesData = {
                 { fateName="Brachialer Bulle", npcName="Hhetsarro-Hirtin" }, --22 boss
                 { fateName="Fang in Gefahr", npcName="Hhetsarro-Angler" }, --24 tower defense
                 { fateName="Mit Blut fängt man Schlangen", npcName="Br'uk Vaw der Sonnenrote" },
-                { fateName="Urzeitliche Vögel", npcName="Pelupelu-Händler" },
+                { fateName="Urzeitliche Vögel", npcName="Pelupelu-Händlerin" },
             },
             fatesWithContinuations = {
                 "Vorbereitung der Jagd"
