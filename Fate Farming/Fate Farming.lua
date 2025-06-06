@@ -315,7 +315,7 @@ BicolorExchangeData =
         },
         shopItems =
         {
-            { itemName = "Goldenes Handelszertifikat für zweifarbige Edelsteiner", itemIndex = 6, price = 100 },
+            { itemName = "Goldenes Handelszertifikat für zweifarbige Edelsteine", itemIndex = 6, price = 100 },
             { itemName = "Alpaka-Filet", itemIndex = 7, price = 3 },
             { itemName = "Swampmonk Thigh", itemIndex = 8, price = 3 },
             { itemName = "Rroneek Chuck", itemIndex = 9, price = 3 },
