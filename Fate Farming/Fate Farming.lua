@@ -819,9 +819,9 @@ FatesData = {
                 { fateName="Salty Showdown", continuationIsBoss=true }
             },
             blacklistedFates= {
-                "Young Volcanoes",
-                "Wolf Parade", -- multiple Pelupelu Peddler npcs, rng whether it tries to talk to the right one
-                "Panaq Attack" -- multiple Pelupleu Peddler npcs
+                "Junge Hitzköpfe",
+                "Hungrig wie die Wölfe", -- multiple Pelupelu Peddler npcs, rng whether it tries to talk to the right one
+                "Panaq-Attacke" -- multiple Pelupleu Peddler npcs
             }
         }
     },
