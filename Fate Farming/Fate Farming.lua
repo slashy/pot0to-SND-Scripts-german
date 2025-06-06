@@ -2262,12 +2262,12 @@ function DoFate()
     if not IgnoreForlorns then
          yield("/target Verlorene Maid")
         if not IgnoreBigForlornOnly then
-            yield("/target Der Verlorene")
+            yield("/target Verlorener")
         end
     end
 
-    if (GetTargetName() == "Verlorene Maid" or GetTargetName() == "Der Verlorene") then
-        if IgnoreForlorns or (IgnoreBigForlornOnly and GetTargetName() == "Der Verlorene") then
+    if (GetTargetName() == "Verlorene Maid" or GetTargetName() == "Verlorener") then
+        if IgnoreForlorns or (IgnoreBigForlornOnly and GetTargetName() == "Verlorener") then
             ClearTarget()
         elseif GetTargetHP() > 0 then
             if not ForlornMarked then
