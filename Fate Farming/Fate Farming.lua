@@ -830,7 +830,7 @@ FatesData = {
         zoneId=1188,
         fatesList={
             collectionsFates={
-                { fateName="Borne on the Backs of Burrowers", npcName="Moblin-Wildbeuter" },
+                { fateName="Steinchensucher", npcName="Moblin-Wildbeuter" },
                 { fateName="Auf das richtige Material kommt es an", npcName="Hanuhanu-Handwerker" },
                 
             },
