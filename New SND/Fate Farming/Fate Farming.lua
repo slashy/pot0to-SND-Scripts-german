@@ -1714,8 +1714,8 @@ function FlyBackToAetheryte()
 end
 
 function Mount()
-    if MountToUse == "mount roulette" then
-        yield('/gaction "mount roulette"')
+    if MountToUse == "Reittier-Roulette" then
+        yield('/gaction "Reittier-Roulette"')
     else
         yield('/mount "' .. MountToUse)
     end
