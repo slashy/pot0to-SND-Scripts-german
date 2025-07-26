@@ -1,6 +1,6 @@
 --[=====[
 [[SND Metadata]]
-author: pot0to
+author: pot0to / german translation by slashy
 version: 3.0.9
 description: >-
   Fate farming script with the following features:
