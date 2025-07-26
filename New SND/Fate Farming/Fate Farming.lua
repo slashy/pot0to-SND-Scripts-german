@@ -1691,7 +1691,7 @@ function FlyBackToAetheryte()
             Dalamud.Log("[FATE] State Change: Ready")
         else
             if MountToUse == "Reittier-Roulette" then
-                yield('/gaction "Reittier-Roulette"')
+                yield('/gaction ' .. MountToUse)
             else
                 yield('/mount "' .. MountToUse)
             end
@@ -1715,7 +1715,7 @@ end
 
 function Mount()
     if MountToUse == "Reittier-Roulette" then
-        yield('/gaction "Reittier-Roulette"')
+        yield('/gaction ' .. MountToUse)
     else
         yield('/mount "' .. MountToUse)
     end
