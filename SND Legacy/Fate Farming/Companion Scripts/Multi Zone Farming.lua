@@ -22,7 +22,7 @@ Created by: pot0to (https://ko-fi.com/pot0to)
 ********************************************************************************
 ]]
 
-FateMacro = "Fate Farming Companion"      -- Name of whatever you nicknamed the base fate farming SND script
+FateMacro = "Fate Farming"      -- Name of whatever you nicknamed the base fate farming SND script
 
 -- Ctrl+F through Fate Farming.lua to find the zoneIds, or find them in Godbert
 ZonesToFarm =
@@ -65,7 +65,7 @@ end
 
 yield("/at y")
 FarmingZoneIndex = 1
-OldBicolorGemCount = GetItemCount(26807)
+OldBicolorGemCount = Inventory.GetItemCount(26807)
 while true do
     if not IsPlayerOccupied() and not IsMacroRunningOrQueued(FateMacro) then
         if GetCharacterCondition(2) or GetCharacterCondition(26) or GetZoneID() == ZonesToFarm[FarmingZoneIndex].zoneId then
@@ -75,7 +75,7 @@ while true do
                 yield("/wait 3")
             until not IsMacroRunningOrQueued(FateMacro)
             LogInfo("[MultiZone] FateMacro has stopped")
-            NewBicolorGemCount = GetItemCount(26807)
+            NewBicolorGemCount = Inventory.GetItemCount(26807)
             if NewBicolorGemCount == OldBicolorGemCount then
                 yield("/echo Bicolor Count: "..NewBicolorGemCount)
                 FarmingZoneIndex  = (FarmingZoneIndex % #ZonesToFarm) + 1
