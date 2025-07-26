@@ -35,57 +35,57 @@ configs:
     default:
     description: Leave blank if you don't want to use any potions. If its HQ include <hq> next to the name "Superior Spiritbond Potion <hq>"
     type: string
-  Chocobo Companion Stance:
-    default: "Healer"
-    description: Options - Follow/Free/Defender/Healer/Attacker/None. Will not summon chocobo if set to "None"
+  Chocobo Haltung:
+    default: "Heilen"
+    description: Options - Mitkommen/Freie Haltung/Verteidigen/Heilen/Angreifen/Keine. Will not summon chocobo if set to "Keine"
     type: string
-  Buy Gysahl Greens?:
+  Gizar-Blatt kaufen?:
     default: true
     description: Automatically buys a 99 stack of Gysahl Greens from the Limsa gil vendor if none in inventory
     type: boolean
-  Ignore FATE if progress is over (%):
+  Ignoriere FATE wenn Fortschritt über (%):
     default: 80
     type: int
     min: 0
     max: 100
     required: true
-  Ignore FATE if duration is less than (mins):
+  Ignoriere FATE wenn Restzeit wengier als (minuten):
     default: 3
     type: int
     min: 0
     max: 100
     required: true
-  Ignore FATE if duration is less than (mins):
+  Ignoriere FATE wenn Restzeit wengier als (minuten):
     default: 3
     type: int
     min: 0
     max: 100
     required: true
-  Ignore boss FATEs until progress is at least (%):
+  Ignoriere Boss-FATE bis Fortschritt mindestens (%):
     default: 0
     type: int
     min: 0
     max: 100
     required: true
-  Ignore Special FATEs until progress is at least (%):
+  Ignoriere Special-FATE bis Fortschritt mindestens (%):
     default: 20
     type: int
     min: 0
     max: 100
     required: true
-  Do collection FATEs?:
+  Sammel-FATEs machen?:
     default: true
     type: boolean
-  Do only bonus FATEs?:
+  Nur Bonus-FATEs machen?:
     default: false
     type: boolean
-  Max melee distance:
+  Maximale Nahkämpfer-Reichweite:
     default: 2.5
     type: float
     min: 0
     max: 30
     required: true
-  Max ranged distance:
+  Maximale Fernkämpfer-Reichweite:
     default: 20
     type: float
     min: 0
@@ -96,25 +96,25 @@ configs:
     type: string
     description: Options - All/Small/None
     required: true
-  Change instances if no FATEs?:
+  Instanz Wechseln, wenn keine FATESs?:
     default: true
     type: boolean
-  Exchange bicolor gemstones for:
-    default: Turali Bicolor Gemstone Voucher
+  Zweifarbige Edelsteine eintauschen gegen:
+    default: Goldenes Handelszertifikat für zweifarbige Edelsteine
     type: string
     description: Leave blank if you don't want to spend your bicolors
-  Self repair?:
+  Selbst reparieren?:
     default: true
     description: If checked, will attempt to repair your gear. If not checked, will go to Limsa mender.
     type: boolean
-  Pause for retainers?:
+  Für Gehilfen pausieren?:
     default: true
     type: boolean
-  Dump extra gear at GC?:
+  Überschüssige Ausrüstung bei GC eintauschen?:
     default: true
     type: boolean
     description: Used with retainers, in case they come back with too much stuff and clog your inventory.
-  Return on death?:
+  Nach Tod zurückkehren?:
     default: true
     type: boolean
     description: Auto accept the box to return to home aetheryte when you die.
@@ -219,83 +219,83 @@ CharacterCondition = {
 ClassList =
 {
     gla = { classId=1, className="Gladiator", isMelee=true, isTank=true },
-    pgl = { classId=2, className="Pugilist", isMelee=true, isTank=false },
-    mrd = { classId=3, className="Marauder", isMelee=true, isTank=true },
-    lnc = { classId=4, className="Lancer", isMelee=true, isTank=false },
-    arc = { classId=5, className="Archer", isMelee=false, isTank=false },
-    cnj = { classId=6, className="Conjurer", isMelee=false, isTank=false },
-    thm = { classId=7, className="Thaumaturge", isMelee=false, isTank=false },
+    pgl = { classId=2, className="Faustkämpfer", isMelee=true, isTank=false },
+    mrd = { classId=3, className="Marodeur", isMelee=true, isTank=true },
+    lnc = { classId=4, className="Pikenier", isMelee=true, isTank=false },
+    arc = { classId=5, className="Waldläufer", isMelee=false, isTank=false },
+    cnj = { classId=6, className="Druide", isMelee=false, isTank=false },
+    thm = { classId=7, className="Thaumaturg", isMelee=false, isTank=false },
     pld = { classId=19, className="Paladin", isMelee=true, isTank=true },
-    mnk = { classId=20, className="Monk", isMelee=true, isTank=false },
-    war = { classId=21, className="Warrior", isMelee=true, isTank=true },
+    mnk = { classId=20, className="Mönch", isMelee=true, isTank=false },
+    war = { classId=21, className="Krieger", isMelee=true, isTank=true },
     drg = { classId=22, className="Dragoon", isMelee=true, isTank=false },
-    brd = { classId=23, className="Bard", isMelee=false, isTank=false },
-    whm = { classId=24, className="White Mage", isMelee=false, isTank=false },
-    blm = { classId=25, className="Black Mage", isMelee=false, isTank=false },
+    brd = { classId=23, className="Barde", isMelee=false, isTank=false },
+    whm = { classId=24, className="Weißmagier", isMelee=false, isTank=false },
+    blm = { classId=25, className="Schwarzmagier", isMelee=false, isTank=false },
     acn = { classId=26, className="Arcanist", isMelee=false, isTank=false },
-    smn = { classId=27, className="Summoner", isMelee=false, isTank=false },
-    sch = { classId=28, className="Scholar", isMelee=false, isTank=false },
-    rog = { classId=29, className="Rogue", isMelee=false, isTank=false },
+    smn = { classId=27, className="Beschwörer", isMelee=false, isTank=false },
+    sch = { classId=28, className="Gelehrter", isMelee=false, isTank=false },
+    rog = { classId=29, className="Schurke", isMelee=false, isTank=false },
     nin = { classId=30, className="Ninja", isMelee=true, isTank=false },
     mch = { classId=31, className="Machinist", isMelee=false, isTank=false},
-    drk = { classId=32, className="Dark Knight", isMelee=true, isTank=true },
-    ast = { classId=33, className="Astrologian", isMelee=false, isTank=false },
+    drk = { classId=32, className="Dunkelritter", isMelee=true, isTank=true },
+    ast = { classId=33, className="Astrologe", isMelee=false, isTank=false },
     sam = { classId=34, className="Samurai", isMelee=true, isTank=false },
-    rdm = { classId=35, className="Red Mage", isMelee=false, isTank=false },
-    blu = { classId=36, className="Blue Mage", isMelee=false, isTank=false },
-    gnb = { classId=37, className="Gunbreaker", isMelee=true, isTank=true },
-    dnc = { classId=38, className="Dancer", isMelee=false, isTank=false },
-    rpr = { classId=39, className="Reaper", isMelee=true, isTank=false },
-    sge = { classId=40, className="Sage", isMelee=false, isTank=false },
+    rdm = { classId=35, className="Rotmagier", isMelee=false, isTank=false },
+    blu = { classId=36, className="Blaumagier", isMelee=false, isTank=false },
+    gnb = { classId=37, className="Revolverklinge", isMelee=true, isTank=true },
+    dnc = { classId=38, className="Tänzer", isMelee=false, isTank=false },
+    rpr = { classId=39, className="Schnitter", isMelee=true, isTank=false },
+    sge = { classId=40, className="Weiser", isMelee=false, isTank=false },
     vpr = { classId=41, className="Viper", isMelee=true, isTank=false },
-    pct = { classId=42, className="Pictomancer", isMelee=false, isTank=false }
+    pct = { classId=42, className="Piktomant", isMelee=false, isTank=false }
 }
 
 BicolorExchangeData =
 {
     {
         shopKeepName = "Gadfrid",
-        zoneName = "Old Sharlayan",
+        zoneName = "Alt-Sharlayan",
         zoneId = 962,
-        aetheryteName = "Old Sharlayan",
-        position=Vector3(78, 5, -37),
+        aetheryteName = "Alt-Sharlayan",
+        x=78, y=5, z=-37,
         shopItems =
         {
-            { itemName = "Bicolor Gemstone Voucher", itemIndex = 8, price = 100 },
-            { itemName = "Ovibos Milk", itemIndex = 9, price = 2 },
-            { itemName = "Hamsa Tenderloin", itemIndex = 10, price = 2 },
-            { itemName = "Yakow Chuck", itemIndex = 11, price = 2 },
-            { itemName = "Bird of Elpis Breast", itemIndex = 12, price = 2 },
-            { itemName = "Egg of Elpis", itemIndex = 13, price = 2 },
-            { itemName = "Amra", itemIndex = 14, price = 2 },
-            { itemName = "Dynamis Crystal", itemIndex = 15, price = 2 },
-            { itemName = "Almasty Fur", itemIndex = 16, price = 2 },
-            { itemName = "Gaja Hide", itemIndex = 17, price = 2 },
-            { itemName = "Luncheon Toad Skin", itemIndex = 18, price = 2 },
-            { itemName = "Saiga Hide", itemIndex = 19, price = 2 },
-            { itemName = "Kumbhira Skin", itemIndex = 20, price = 2 },
+            { itemName = "Handelszertifikat für zweifarbige Edelsteine", itemIndex = 8, price = 100 },
+            { itemName = "Ovibos-Milch", itemIndex = 9, price = 2 },
+            { itemName = "Hamsa-Bruststück", itemIndex = 10, price = 2 },
+            { itemName = "Yakuh-Schulterstück", itemIndex = 11, price = 2 },
+            { itemName = "Brustfleisch des Elpisvogels", itemIndex = 12, price = 2 },
+            { itemName = "Ei des Elpisvogels", itemIndex = 13, price = 2 },
+            { itemName = "Amrafrucht", itemIndex = 14, price = 2 },
+            { itemName = "Dynamis-Splitter", itemIndex = 15, price = 2 },
+            { itemName = "Alma-Fell", itemIndex = 16, price = 2 },
+            { itemName = "Gaja-Haut", itemIndex = 17, price = 2 },
+            { itemName = "Bergkröten-Haut", itemIndex = 18, price = 2 },
+            { itemName = "Saiga-Haut", itemIndex = 19, price = 2 },
+            { itemName = "Kumbhila-Haut", itemIndex = 20, price = 2 },
             { itemName = "Ophiotauros Hide", itemIndex = 21, price = 2 },
-            { itemName = "Berkanan Sap", itemIndex = 22, price = 2 },
-            { itemName = "Dynamite Ash", itemIndex = 23, price = 2 },
-            { itemName = "Lunatender Blossom", itemIndex = 24, price = 2 },
-            { itemName = "Mousse Flesh", itemIndex = 25, price = 2 },
-            { itemName = "Petalouda Scales", itemIndex = 26, price = 2 },
+            { itemName = "Berkanansaft", itemIndex = 22, price = 2 },
+            { itemName = "Dynamit-Asche", itemIndex = 23, price = 2 },
+            { itemName = "Blume eines Lunatenders", itemIndex = 24, price = 2 },
+            { itemName = "Mousse-Glibber", itemIndex = 25, price = 2 },
+            { itemName = "Flügelstaub einer Petalouda", itemIndex = 26, price = 2 },
         }
     },
     {
         shopKeepName = "Beryl",
-        zoneName = "Solution Nine",
+        zoneName = "Lösung Neun",
         zoneId = 1186,
-        aetheryteName = "Solution Nine",
-        position=Vector3(-198.47, 0.92, -6.95),
+        aetheryteName = "Lösung Neune",
+        x=-198.47, y=0.92, z=-6.95,
         miniAethernet = {
-            name = "Nexus Arcade",
-            position=Vector3(-157.74, 0.29, 17.43)
+            name = "Nexus-Arkaden",
+            x=-157.74, y=0.29, z=17.43
         },
         shopItems =
         {
-            { itemName = "Turali Bicolor Gemstone Voucher", itemIndex = 6, price = 100 },
-            { itemName = "Alpaca Fillet", itemIndex = 7, price = 3 },
+            { itemName = "Goldenes Handelszertifikat für zweifarbige Edelsteine", itemIndex = 6, price = 100 },
+            { itemName = "Alpaka-Filet", itemIndex = 7, price = 3 },
             { itemName = "Swampmonk Thigh", itemIndex = 8, price = 3 },
             { itemName = "Rroneek Chuck", itemIndex = 9, price = 3 },
             { itemName = "Megamaguey Pineapple", itemIndex = 10, price = 3 },
@@ -318,14 +318,14 @@ BicolorExchangeData =
 
 FatesData = {
     {
-        zoneName = "Middle La Noscea",
+        zoneName = "Zentrales La Noscea",
         zoneId = 134,
         fatesList = {
             collectionsFates= {},
             otherNpcFates= {
-                { fateName="Thwack-a-Mole" , npcName="Troubled Tiller" },
-                { fateName="Yellow-bellied Greenbacks", npcName="Yellowjacket Drill Sergeant"},
-                { fateName="The Orange Boxes", npcName="Farmer in Need" }
+                { fateName="Mulle auf die Stulle" , npcName="Besorgter Bauer" },
+                { fateName="Übermut tut selten gut", npcName="Gelbjacken-Ausbilder"},
+                { fateName="Es rappelt in der Kiste", npcName="Hilfsbedürftiger Bauer" }
             },
             fatesWithContinuations = {},
             blacklistedFates= {}
@@ -769,7 +769,7 @@ FatesData = {
         zoneId = 961,
         fatesList= {
             collectionsFates= {
-                { fateName="So Sorry, Sokles", npcName="Flora Overseer" }
+                { fateName="Sokles' Zorn", npcName="Flora Overseer" }
             },
             otherNpcFates= {
                 { fateName="Grand Designs: Unknown Execution", npcName="Meletos the Inscrutable" },
@@ -786,21 +786,21 @@ FatesData = {
         fatesList= {
             collectionsFates= {},
             otherNpcFates= {
-                { fateName="Pasture Expiration Date", npcName="Tsivli Stoutstrider" },
-                { fateName="Gust Stop Already", npcName="Mourning Yok Huy" },
-                { fateName="Lay Off the Horns", npcName="Yok Huy Vigilkeeper" },
-                { fateName="Birds Up", npcName="Coffee Farmer" },
-                { fateName="Salty Showdown", npcName="Chirwagur Sabreur" },
-                { fateName="Fire Suppression", npcName="Tsivli Stoutstrider"} ,
-                { fateName="Panaq Attack", npcName="Pelupelu Peddler" }
+                { fateName="Unerwünschte Rasenmäher", npcName="Tsivli der Flinkfüßige" },
+                { fateName="Der Wind, das höllische Kind", npcName="Trauernder Yok Huy" },
+                { fateName="Es kratzt mich gewaltig", npcName="Yok-Huy-Ruinenwächter" },
+                { fateName="Hiebe für die Bohnendiebe", npcName="Kaffeebauer" },
+                { fateName="Salziges Stelldichein", npcName="Chirwagur-Säbelkämpfer" },
+                { fateName="Racaqurq die tanzende Flamme", npcName="Tsivli der Flinkfüßige"} ,
+                { fateName="Panaq-Attacke", npcName="Pelupelu-Händler" }
             },
             fatesWithContinuations = {
                 { fateName="Salty Showdown", continuationIsBoss=true }
             },
             blacklistedFates= {
-                "Young Volcanoes",
-                "Wolf Parade", -- multiple Pelupelu Peddler npcs, rng whether it tries to talk to the right one
-                "Panaq Attack" -- multiple Pelupleu Peddler npcs
+                "Junge Hitzköpfe",
+                "Hungrig wie die Wölfe", -- multiple Pelupelu Peddler npcs, rng whether it tries to talk to the right one
+                "Panaq-Attacke" -- multiple Pelupleu Peddler npcs
             }
         }
     },
@@ -809,22 +809,22 @@ FatesData = {
         zoneId=1188,
         fatesList={
             collectionsFates={
-                { fateName="Borne on the Backs of Burrowers", npcName="Moblin Forager" },
-                { fateName="Combing the Area", npcName="Hanuhanu Combmaker" },
+                { fateName="Steinchensucher", npcName="Moblin-Wildbeuter" },
+                { fateName="Auf das richtige Material kommt es an", npcName="Hanuhanu-Handwerker" },
                 
             },
             otherNpcFates= {
-                { fateName="There's Always a Bigger Beast", npcName="Hanuhanu Angler" },
-                { fateName="Toucalibri at That Game", npcName="Hanuhanu Windscryer" },
-                { fateName="Putting the Fun in Fungicide", npcName="Bagnobrok Craftythoughts" },
-                { fateName="Reeds in Need", npcName="Hanuhanu Farmer" },
-                { fateName="Tax Dodging", npcName="Pelupelu Peddler" },
+                { fateName="Die Fische, die ich rief", npcName="Hanuhanu-Fischer" },
+                { fateName="Nicht euer Obst", npcName="Hanuhanu-Orakel" },
+                { fateName="Es ist Pilzsaison", npcName="Bagnobrok" },
+                { fateName="Zu Schilfe!", npcName="Hanuhanu-Farmer" },
+                { fateName="Ehrlich währt am längsten", npcName="Pelupelu-Händler" },
 
             },
             fatesWithContinuations = {},
             blacklistedFates= {
-                "Mole Patrol",
-                "Tax Dodging" -- multiple Pelupelu Peddlers
+                "Gefahr von unten",
+                "Ehrlich währt am längsten" -- multiple Pelupelu Peddlers
             }
         }
     },
@@ -833,20 +833,20 @@ FatesData = {
         zoneId=1189,
         fatesList= {
             collectionsFates= {
-                { fateName="Escape Shroom", npcName="Hoobigo Forager" }
+                { fateName="Penetrante Pilze", npcName="Hoobigo-Wildbeuter" }
             },
             otherNpcFates= {
-                --{ fateName=, npcName="Xbr'aal Hunter" }, 2 npcs names same thing....
-                { fateName="La Selva se lo Llevó", npcName="Xbr'aal Hunter" },
-                { fateName="Stabbing Gutward", npcName="Doppro Spearbrother" },
-                { fateName="Porting is Such Sweet Sorrow", npcName="Hoobigo Porter" }
-                -- { fateName="Stick it to the Mantis", npcName="Xbr'aal Sentry" }, -- 2 npcs named same thing.....
+                --{ fateName=, npcName="X'braal-Jäger" }, 2 npcs names same thing....
+                { fateName="Ruhm oder Leben", npcName="X'braal-Jäger" },
+                { fateName="Zeittotstecherei", npcName="Doppro-Speerkämpfer" },
+                { fateName="Ein Spediteur hat's schwer", npcName="Hoobigo-Träger" }
+                -- { fateName="Je mehr, desto lustiger", npcName="X'braal-Jäger" }, -- 2 npcs named same thing.....
             },
             fatesWithContinuations = {
-                "Stabbing Gutward"
+                "Zeittotstecherei"
             },
             blacklistedFates= {
-                "The Departed"
+                "Schlingelpflanzen"
             }
         }
     },
@@ -855,71 +855,71 @@ FatesData = {
         zoneId=1190,
         fatesList= {
             collectionsFates= {
-                { fateName="Gonna Have Me Some Fur", npcName="Tonawawtan Trapper" },
-                { fateName="The Serpentlord Sires", npcName="Br'uk Vaw of the Setting Sun" }
+                { fateName="Backenhaar so wunderbar", npcName="Tonawawta-Wildbeuter" },
+                { fateName="Vorbereitung der Jagd", npcName="Br'uk Vaw der Sonnenrote" }
             },
             otherNpcFates= {
-                { fateName="The Dead Never Die", npcName="Tonawawtan Worker" }, --22 boss
-                { fateName="Ain't What I Herd", npcName="Hhetsarro Herder" }, --23 normal
-                { fateName="Helms off to the Bull", npcName="Hhetsarro Herder" }, --22 boss
-                { fateName="A Raptor Runs Through It", npcName="Hhetsarro Angler" }, --24 tower defense
-                { fateName="The Serpentlord Suffers", npcName="Br'uk Vaw of the Setting Sun" },
-                { fateName="That's Me and the Porter", npcName="Pelupelu Peddler" },
+                { fateName="Totgesagte leben länger", npcName="Tonawawta-Arbeiter" }, --22 boss
+                { fateName="Hüter der Herde", npcName="Hhetsarro-Hirtin" }, --23 normal
+                { fateName="Brachialer Bulle", npcName="Hhetsarro-Hirtin" }, --22 boss
+                { fateName="Fang in Gefahr", npcName="Hhetsarro-Angler" }, --24 tower defense
+                { fateName="Mit Blut fängt man Schlangen", npcName="Br'uk Vaw der Sonnenrote" },
+                { fateName="Urzeitliche Vögel", npcName="Pelupelu-Händlerin" },
             },
             fatesWithContinuations = {
-                "The Serpentlord Sires"
+                "Vorbereitung der Jagd"
             },
             specialFates = {
-                "The Serpentlord Seethes" -- big snake fate
+                "In den sandigen Schlund" -- big snake fate
             },
             blacklistedFates= {}
         }
     },
     {
-        zoneName="Heritage Found",
+        zoneName="Ewiges Erbe",
         zoneId=1191,
         fatesList= {
             collectionsFates= {
-                { fateName="License to Dill", npcName="Tonawawtan Provider" },
-                { fateName="When It's So Salvage", npcName="Refined Reforger" }
+                { fateName="Bauer sucht Heilkraut", npcName="Tonawawta-Bauer" },
+                { fateName="Aufräumen mit Methode", npcName="Würdevolle Wiederschafferin" }
             },
             otherNpcFates= {
-                { fateName="It's Super Defective", npcName="Novice Hunter" },
-                { fateName="Running of the Katobleps", npcName="Novice Hunter" },
-                { fateName="Ware the Wolves", npcName="Imperiled Hunter" },
-                { fateName="Domo Arigato", npcName="Perplexed Reforger" },
-                { fateName="Old Stampeding Grounds", npcName="Driftdowns Reforger" },
-                { fateName="Pulling the Wool", npcName="Panicked Courier" }
+                { fateName="Maschinen auf Abwegen", npcName="Unerfahrener Merzer" },
+                { fateName="Vom Regen in die Traufe", npcName="Unerfahrener Merzer" },
+                { fateName="Auf sie mit Geheul", npcName="Bedrohter Merzer" },
+                { fateName="Durchgeknallte Schaltkreise", npcName="Ratloser Wiederschaffer" },
+                { fateName="Erwachen der Bestie", npcName="Wiederschafferin der Unterströme" },
+                { fateName="Leider konnten wir Ihr Paket nicht zustellen", npcName="Verängstigter Lieferant" }
             },
             fatesWithContinuations = {
-                { fateName="Domo Arigato", continuationIsBoss=false }
+                { fateName="Durchgeknallte Schaltkreise", continuationIsBoss=false }
             },
             blacklistedFates= {
-                "When It's So Salvage", -- terrain is terrible
-                "print('I hate snakes')"
+                "Aufräumen mit Methode", -- terrain is terrible
+                "Falsche Schlange"
             }
         }
     },
     {
-        zoneName="Living Memory",
+        zoneName="Lebende Erinnerung",
         zoneId=1192,
         fatesList= {
             collectionsFates= {
-                { fateName="Seeds of Tomorrow", npcName="Unlost Sentry GX" },
-                { fateName="Scattered Memories", npcName="Unlost Sentry GX" }
+                { fateName="Schützenswerte Samen", npcName="Unverlorene Einheit GX" },
+                { fateName="Was bleibt, ist die Erinnerung", npcName="Unverlorene Einheit GX" }
             },
             otherNpcFates= {
-                { fateName="Canal Carnage", npcName="Unlost Sentry GX" },
-                { fateName="Mascot March", npcName="The Grand Marshal" }
+                { fateName="Mehr Sicherheit für Kanalstadt", npcName="Unverlorene Einheit GX" },
+                { fateName="Alles andere als fade, diese Parade", npcName="Närrischer Parademeister" }
             },
             fatesWithContinuations =
             {
-                { fateName="Plumbers Don't Fear Slimes", continuationIsBoss=true },
-                { fateName="Mascot March", continuationIsBoss=true }
+                { fateName="Wasser marsch", continuationIsBoss=true },
+                { fateName="Alles andere als fade, diese Parade", continuationIsBoss=true }
             },
             specialFates =
             {
-                "Mascot Murder"
+                "Mordendes Maskottchen"
             },
             blacklistedFates= {
             }
@@ -1685,7 +1685,7 @@ function FlyBackToAetheryte()
         end
 
         if Svc.Condition[CharacterCondition.flying] then
-            yield("/ac dismount") -- land but don't actually dismount, to avoid running chocobo timer
+            yield("/ac Absteigen") -- land but don't actually dismount, to avoid running chocobo timer
         elseif Svc.Condition[CharacterCondition.mounted] then
             State = CharacterState.ready
             Dalamud.Log("[FATE] State Change: Ready")
@@ -1734,7 +1734,7 @@ end
 
 function Dismount()
     if Svc.Condition[CharacterCondition.flying] then
-        yield('/ac dismount')
+        yield('/ac Absteigen')
 
         local now = os.clock()
         if now - LastStuckCheckTime > 1 then
@@ -2069,9 +2069,9 @@ function SummonChocobo()
 
     if ShouldSummonChocobo and GetBuddyTimeRemaining() <= ResummonChocoboTimeLeft then
         if Inventory.GetItemCount(4868) > 0 then
-            yield("/item Gysahl Greens")
+            yield("/item Gizar-Blatt")
             yield("/wait 3")
-            yield('/cac "'..ChocoboStance..' stance"')
+            yield('/cac "'..ChocoboStance..'"')
         elseif ShouldAutoBuyGysahlGreens then
             State = CharacterState.autoBuyGysahlGreens
             Dalamud.Log("[FATE] State Change: AutoBuyGysahlGreens")
@@ -2087,7 +2087,7 @@ function AutoBuyGysahlGreens()
         if Addons.GetAddon("Shop").Ready then
             yield("/callback Shop true -1")
         elseif Svc.ClientState.TerritoryType == SelectedZone.zoneId then
-            yield("/item Gysahl Greens")
+            yield("/item Gizar-Blatt")
         else
             State = CharacterState.ready
             Dalamud.Log("State Change: ready")
@@ -2096,7 +2096,7 @@ function AutoBuyGysahlGreens()
     else
         if Svc.ClientState.TerritoryType ~=  129 then
             yield("/vnav stop")
-            TeleportTo("Limsa Lominsa Lower Decks")
+            TeleportTo("Untere Decks")
             return
         else
             local gysahlGreensVendor = { position=Vector3(-62.1, 18.0, 9.4), npcName="Bango Zango" }
@@ -2428,12 +2428,12 @@ function DoFate()
         end
     end
 
-    if (GetTargetName() == "Forlorn Maiden" or GetTargetName() == "The Forlorn") then
-        if IgnoreForlorns or (IgnoreBigForlornOnly and GetTargetName() == "The Forlorn") then
+    if (GetTargetName() == "Verlorene Maid" or GetTargetName() == "Verlorener") then
+        if IgnoreForlorns or (IgnoreBigForlornOnly and GetTargetName() == "Verlorener") then
             ClearTarget()
         elseif not Svc.Targets.Target.IsDead then
             if not ForlornMarked then
-                yield("/enemysign attack1")
+                yield("/mark attack1")
                 if Echo == "All" then
                     yield("/echo Found Forlorn! <se.3>")
                 end
@@ -2751,12 +2751,12 @@ function ProcessRetainers()
 
         if Svc.ClientState.TerritoryType ~=  129 then
             yield("/vnav stop")
-            TeleportTo("Limsa Lominsa Lower Decks")
+            TeleportTo("Untere Decks")
             return
         end
 
         local summoningBell = {
-            name="Summoning Bell",
+            name="Krämerklingel",
             position=Vector3(-122.72, 18.00, 20.39)
         }
         if GetDistanceToPoint(summoningBell.position) > 4.5 then
@@ -3049,29 +3049,29 @@ Dalamud.Log("[FATE] Starting fate farming script.")
 Food = Config.Get("Food")
 Potion = Config.Get("Potion")
 ResummonChocoboTimeLeft         = 3 * 60        --Resummons chocobo if there's less than this many seconds left on the timer, so it doesn't disappear on you in the middle of a fate.
-ChocoboStance = Config.Get("Chocobo Companion Stance") -- Options: Follow, Free, Defender, Healer, Attacker, None. Do not summon if None.
-ShouldSummonChocobo = ChocoboStance == "Follow"
-    or ChocoboStance == "Free"
-    or ChocoboStance == "Defender"
-    or ChocoboStance == "Healer"
-    or ChocoboStance == "Attacker"
+ChocoboStance = Config.Get("Chocobo Haltung") -- Options: Follow, Free, Defender, Healer, Attacker, None. Do not summon if None.
+ShouldSummonChocobo = ChocoboStance == "Mitkommen" 
+    or ChocoboStance == "Freie Haltung"
+    or ChocoboStance == "Verteidigen"
+    or ChocoboStance == "Heilen"
+    or ChocoboStance == "Angreifen"
 
-ShouldAutoBuyGysahlGreens = Config.Get("Buy Gysahl Greens?")    --
-MountToUse                          = "mount roulette"       --The mount you'd like to use when flying between fates
+ShouldAutoBuyGysahlGreens = Config.Get("Gizar-Blatt kaufen?")    --
+MountToUse                          = "Reittier-Roulette"       --The mount you'd like to use when flying between fates
 FatePriority                        = {"DistanceTeleport", "Progress", "Bonus", "TimeLeft", "Distance"}
 
 --Fate Combat Settings
-CompletionToIgnoreFate = Config.Get("Ignore FATE if progress is over (%)")
-MinTimeLeftToIgnoreFate = Config.Get("Ignore FATE if duration is less than (mins)")*60
-CompletionToJoinBossFate = Config.Get("Ignore boss FATEs until progress is at least (%)")
-CompletionToJoinSpecialBossFates = Config.Get("Ignore Special FATEs until progress is at least (%)")
+CompletionToIgnoreFate = Config.Get("Ignoriere FATE wenn Fortschritt über (%)")
+MinTimeLeftToIgnoreFate = Config.Get("Ignoriere FATE wenn Restzeit wengier als (minuten)")*60
+CompletionToJoinBossFate = Config.Get("Ignoriere Boss-FATE bis Fortschritt mindestens (%)")
+CompletionToJoinSpecialBossFates = Config.Get("Ignoriere Special-FATE bis Fortschritt mindestens (%)")
 ClassForBossFates = ""            --If you want to use a different class for boss fates, set this to the 3 letter abbreviation
                                                         --for the class. Ex: "PLD"
-JoinCollectionsFates = Config.Get("Do collection FATEs?")
-BonusFatesOnly = Config.Get("Do only bonus FATEs?")         --If true, will only do bonus fates and ignore everything else
+JoinCollectionsFates = Config.Get("Sammel-FATEs machen?")
+BonusFatesOnly = Config.Get("Nur Bonus-FATEs machen?")         --If true, will only do bonus fates and ignore everything else
 
-MeleeDist = Config.Get("Max melee distance")
-RangedDist = Config.Get("Max ranged distance")
+MeleeDist = Config.Get("Maximale Nahkämpfer-Reichweite")
+RangedDist = Config.Get("Maximale Fernkämpfer-Reichweite")
 
 RotationPlugin = Config.Get("Rotation Plugin")
 if RotationPlugin == "Any" then
@@ -3117,24 +3117,24 @@ MinWait                             = 3             --Min number of seconds it s
 MaxWait                             = 10            --Max number of seconds it should wait until mounting up for next fate.
                                                         --Actual wait time will be a randomly generated number between MinWait and MaxWait.
 DownTimeWaitAtNearestAetheryte      = false         --When waiting for fates to pop, should you fly to the nearest Aetheryte and wait there?
-EnableChangeInstance = Config.Get("Change instances if no FATEs?")
+EnableChangeInstance = Config.Get("Instanz Wechseln, wenn keine FATESs?")
 WaitIfBonusBuff = true          --Don't change instances if you have the Twist of Fate bonus buff
 NumberOfInstances = 2
-ShouldExchangeBicolorGemstones = Config.Get("Exchange bicolor gemstones?")
-ItemToPurchase = Config.Get("Exchange bicolor gemstones for")
+ShouldExchangeBicolorGemstones = Config.Get("Zweifarbige Edelsteine eintauschen?")
+ItemToPurchase = Config.Get("Zweifarbige Edelsteine eintauschen gegen")
 ShouldExchangeBicolorGemstones = true
 if ItemToPurchase == "" or ItemToPurchase == nil then
     ShouldExchangeBicolorGemstones = false
 end
-SelfRepair = Config.Get("Self repair?")
+SelfRepair = Config.Get("Selbst reparieren?")
 RemainingDurabilityToRepair     = 10            --the amount it needs to drop before Repairing (set it to 0 if you don't want it to repair)
 ShouldAutoBuyDarkMatter         = true          --Automatically buys a 99 stack of Grade 8 Dark Matter from the Limsa gil vendor if you're out
 ShouldExtractMateria                = true          --should it Extract Materia
-Retainers = Config.Get("Pause for retainers?")
-ShouldGrandCompanyTurnIn = Config.Get("Dump extra gear at GC?")         --should it do Turn ins at the GC (requires Deliveroo)
+Retainers = Config.Get("Für Gehilfen pausieren?")
+ShouldGrandCompanyTurnIn = Config.Get("Überschüssige Ausrüstung bei GC eintauschen?")         --should it do Turn ins at the GC (requires Deliveroo)
     InventorySlotsLeft              = 5             --how much inventory space before turning in
 
-ReturnOnDeath = Config.Get("Return on death?")
+ReturnOnDeath = Config.Get("Nach Tod zurückkehren?")
 
 Echo = Config.Get("Echo logs")
 CompanionScriptMode                 = false         --Set to true if you are using the fate script with a companion script (such as the Atma Farmer)
@@ -3242,7 +3242,7 @@ if InActiveFate() then
 end
 
 if ShouldSummonChocobo and GetBuddyTimeRemaining() > 0 then
-    yield('/cac "'..ChocoboStance..' stance"')
+    yield('/cac "'..ChocoboStance..'"')
 end
 
 while not StopScript do
