@@ -1753,7 +1753,7 @@ function Dismount()
             LastStuckCheckPosition = Svc.ClientState.LocalPlayer.Position
         end
     elseif Svc.Condition[CharacterCondition.mounted] then
-        yield('/ac dismount')
+        yield('/ac Absteigen')
     end
 end
 
