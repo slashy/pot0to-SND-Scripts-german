@@ -2855,7 +2855,7 @@ function Repair()
             if needsRepair.Count > 0 then
                 if not Addons.GetAddon("Repair").Ready then
                     Dalamud.Log("[FATE] Opening repair menu...")
-                    yield("/generalaction repair")
+                    yield("/generalaction reparatur")
                 end
             else
                 State = CharacterState.ready
@@ -2941,7 +2941,7 @@ function ExtractMateria()
 
     if Inventory.GetSpiritbondedItems().Count > 0 and Inventory.GetFreeInventorySlots() > 1 then
         if not Addons.GetAddon("Materialize").Ready then
-            yield("/generalaction \"Materia Extraction\"")
+            yield("/generalaction Materia-Extraktion")
             return
         end
 
