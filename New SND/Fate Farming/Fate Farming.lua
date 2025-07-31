@@ -1017,7 +1017,7 @@ function MoveToTargetHitbox()
         newPos = IPC.vnavmesh.PointOnFloor(edgeOfHitbox, false, halfExt)
         halfExt = halfExt + 10
     end
-    yield("/vnav moveto "..newPos.X.." "..newPos.Y.." "..newPos.Z)
+    Engines.Run("/vnav moveto "..newPos.X.." "..newPos.Y.." "..newPos.Z)
 end
 
 function HasPlugin(name)
@@ -1121,7 +1121,7 @@ function SelectNextZone()
         end
     end
     if nextZone == nil then
-        yield("/echo [FATE] Current zone is only partially supported. No data on npc fates.")
+        Engines.Run("/echo [FATE] Current zone is only partially supported. No data on npc fates.")
         nextZone = {
             zoneName = "",
             zoneId = nextZoneId,
@@ -1321,12 +1321,12 @@ function SelectNextFate()
     if nextFate == nil then
         Dalamud.Log("[FATE] No eligible fates found.")
         if Echo == "All" then
-            yield("/echo [FATE] No eligible fates found.")
+            Engines.Run("/echo [FATE] No eligible fates found.")
         end
     else
         Dalamud.Log("[FATE] Final selected fate #"..nextFate.fateId.." "..nextFate.fateName)
     end
-    yield("/wait 0.211")
+    yieldd\("/wait 0.211")
 
     return nextFate
 end
@@ -1335,9 +1335,9 @@ function AcceptNPCFateOrRejectOtherYesno()
     if Addons.GetAddon("SelectYesno").Ready then
         local dialogBox = GetNodeText("SelectYesno", 1, 2)
         if type(dialogBox) == "string" and dialogBox:find("The recommended level for this FATE is") then
-            yield("/callback SelectYesno true 0") --accept fate
+            Engines.Run("/callback SelectYesno true 0") --accept fate
         else
-            yield("/callback SelectYesno true 1") --decline all other boxes
+            Engines.Run("/callback SelectYesno true 1") --decline all other boxes
         end
     end
 end
@@ -1498,8 +1498,8 @@ end
 function AcceptTeleportOfferLocation(destinationAetheryte)
     if Addons.GetAddon("_NotificationTelepo").Ready then
         local location = GetNodeText("_NotificationTelepo", 3, 4)
-        yield("/callback _Notification true 0 16 "..location)
-        yield("/wait 1")
+        Engines.Run("/callback _Notification true 0 16 "..location)
+        yieldd\("/wait 1")
     end
 
     if Addons.GetAddon("SelectYesno").Ready then
@@ -1508,13 +1508,13 @@ function AcceptTeleportOfferLocation(destinationAetheryte)
             local teleportOfferLocation = teleportOfferMessage:match("Accept Teleport to (.+)%?")
             if teleportOfferLocation ~= nil then
                 if string.lower(teleportOfferLocation) == string.lower(destinationAetheryte) then
-                    yield("/callback SelectYesno true 0") -- accept teleport
+                    Engines.Run("/callback SelectYesno true 0") -- accept teleport
                     return
                 else
                     Dalamud.Log("Offer for "..teleportOfferLocation.." and destination "..destinationAetheryte.." are not the same. Declining teleport.")
                 end
             end
-            yield("/callback SelectYesno true 2") -- decline teleport
+            Engines.Run("/callback SelectYesno true 2") -- decline teleport
             return
         end
     end
@@ -1525,21 +1525,21 @@ function TeleportTo(aetheryteName)
 
     while EorzeaTimeToUnixTime(Instances.Framework.EorzeaTime) - LastTeleportTimeStamp < 5 do
         Dalamud.Log("[FATE] Too soon since last teleport. Waiting...")
-        yield("/wait 5.001")
+        yieldd\("/wait 5.001")
     end
 
-    yield("/li tp "..aetheryteName)
-    yield("/wait 1") -- wait for casting to begin
+    Engines.Run("/li tp "..aetheryteName)
+    yieldd\("/wait 1") -- wait for casting to begin
     while Svc.Condition[CharacterCondition.casting] do
         Dalamud.Log("[FATE] Casting teleport...")
-        yield("/wait 1")
+        yieldd\("/wait 1")
     end
-    yield("/wait 1") -- wait for that microsecond in between the cast finishing and the transition beginning
+    yieldd\("/wait 1") -- wait for that microsecond in between the cast finishing and the transition beginning
     while Svc.Condition[CharacterCondition.betweenAreas] do
         Dalamud.Log("[FATE] Teleporting...")
-        yield("/wait 1")
+        yieldd\("/wait 1")
     end
-    yield("/wait 1")
+    yieldd\("/wait 1")
     LastTeleportTimeStamp = EorzeaTimeToUnixTime(Instances.Framework.EorzeaTime)
 end
 
@@ -1551,16 +1551,16 @@ function ChangeInstance()
                 StopScript = true
             else
                 Dalamud.Log("[Fate Farming] Waiting for buff or fate rewards")
-                yield("/wait 3")
+                yieldd\("/wait 3")
             end
         else
-            yield("/wait 10")
+            yieldd\("/wait 10")
             SuccessiveInstanceChanges = 0
         end
         return
     end
 
-    yield("/target aetheryte") -- search for nearby aetheryte
+    Engines.Run("/target aetheryte") -- search for nearby aetheryte
     if Svc.Targets.Target == nil or GetTargetName() ~= "aetheryte" then -- if no aetheryte within targeting range, teleport to it
         Dalamud.Log("[FATE] Aetheryte not within targetable range")
         local closestAetheryte = nil
@@ -1580,7 +1580,7 @@ function ChangeInstance()
     end
 
     if WaitingForFateRewards ~= nil then
-        yield("/wait 10")
+        yieldd\("/wait 10")
         return
     end
 
@@ -1588,9 +1588,9 @@ function ChangeInstance()
         Dalamud.Log("[FATE] Targeting aetheryte, but greater than 10 distance")
         if not (IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning()) then
             if Svc.Condition[CharacterCondition.flying] and SelectedZone.flying then
-                yield("/vnav flytarget")
+                Engines.Run("/vnav flytarget")
             else
-                yield("/vnav movetarget")
+                Engines.Run("/vnav movetarget")
             end
         elseif GetDistanceToTarget() > 20 and not Svc.Condition[CharacterCondition.mounted] then
             State = CharacterState.mounting
@@ -1601,7 +1601,7 @@ function ChangeInstance()
 
     Dalamud.Log("[FATE] Within 10 distance")
     if IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() then
-        yield("/vnav stop")
+        Engines.Run("/vnav stop")
         return
     end
 
@@ -1613,8 +1613,8 @@ function ChangeInstance()
 
     Dalamud.Log("[FATE] Transferring to next instance")
     local nextInstance = (GetZoneInstance() % 2) + 1
-    yield("/li "..nextInstance) -- start instance transfer
-    yield("/wait 1") -- wait for instance transfer to register
+    Engines.Run("/li "..nextInstance) -- start instance transfer
+    yieldd\("/wait 1") -- wait for instance transfer to register
     State = CharacterState.ready
     SuccessiveInstanceChanges = SuccessiveInstanceChanges + 1
     Dalamud.Log("[FATE] State Change: Ready")
@@ -1643,22 +1643,22 @@ function WaitForContinuation()
             if not Player.IsPlayerOccupied then
                 if CurrentFate.continuationIsBoss and currentClass ~= BossFatesClass.classId then
                     Dalamud.Log("WaitForContinuation SwitchToBoss")
-                    yield("/gs change "..BossFatesClass.className)
+                    Engines.Run("/gs change "..BossFatesClass.className)
                 elseif not CurrentFate.continuationIsBoss and currentClass ~= MainClass.classId then
                     Dalamud.Log("WaitForContinuation SwitchToMain")
-                    yield("/gs change "..MainClass.className)
+                    Engines.Run("/gs change "..MainClass.className)
                 end
             end
         end
 
-        yield("/wait 1")
+        yieldd\("/wait 1")
     end
 end
 
 function FlyBackToAetheryte()
     NextFate = SelectNextFate()
     if NextFate ~= nil then
-        yield("/vnav stop")
+        Engines.Run("/vnav stop")
         State = CharacterState.ready
         Dalamud.Log("[FATE] State Change: Ready")
         return
@@ -1667,33 +1667,33 @@ function FlyBackToAetheryte()
     local closestAetheryte = GetClosestAetheryte(Svc.ClientState.LocalPlayer.Position, 0)
     if closestAetheryte == nil then
         DownTimeWaitAtNearestAetheryte = false
-        yield("/echo Could not find aetheryte in the area. Turning off feature to fly back to aetheryte.")
+        Engines.Run("/echo Could not find aetheryte in the area. Turning off feature to fly back to aetheryte.")
         return
     end
     -- if you get any sort of error while flying back, then just abort and tp back
     if Addons.GetAddon("_TextError").Ready and GetNodeText("_TextError", 1) == "Your mount can fly no higher." then
-        yield("/vnav stop")
+        Engines.Run("/vnav stop")
         TeleportTo(closestAetheryte.aetheryteName)
         return
     end
 
-    yield("/target aetheryte")
+    Engines.Run("/target aetheryte")
 
     if Svc.Targets.Target ~= nil and GetTargetName() == "aetheryte" and GetDistanceToTarget() <= 20 then
         if IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() then
-            yield("/vnav stop")
+            Engines.Run("/vnav stop")
         end
 
         if Svc.Condition[CharacterCondition.flying] then
-            yield("/ac Absteigen") -- land but don't actually dismount, to avoid running chocobo timer
+            Engines.Run("/ac Absteigen") -- land but don't actually dismount, to avoid running chocobo timer
         elseif Svc.Condition[CharacterCondition.mounted] then
             State = CharacterState.ready
             Dalamud.Log("[FATE] State Change: Ready")
         else
             if MountToUse == "Reittier-Roulette" then
-                yield('/gaction ' .. MountToUse)
+                Engines.Run('/gaction ' .. MountToUse)
             else
-                yield('/mount "' .. MountToUse)
+                Engines.Run('/mount "' .. MountToUse)
             end
         end
         return
@@ -1715,16 +1715,16 @@ end
 
 function Mount()
     if MountToUse == "Reittier-Roulette" then
-        yield('/gaction ' .. MountToUse)
+        Engines.Run('/gaction ' .. MountToUse)
     else
-        yield('/mount "' .. MountToUse)
+        Engines.Run('/mount "' .. MountToUse)
     end
-    yield("/wait 1")
+    yieldd\("/wait 1")
 end
 
 function MountState()
     if Svc.Condition[CharacterCondition.mounted] then
-        yield("/wait 1") -- wait a second to make sure you're firmly on the mount
+        yieldd\("/wait 1") -- wait a second to make sure you're firmly on the mount
         State = CharacterState.moveToFate
         Dalamud.Log("[FATE] State Change: MoveToFate")
     else
@@ -1734,7 +1734,7 @@ end
 
 function Dismount()
     if Svc.Condition[CharacterCondition.flying] then
-        yield('/ac Absteigen')
+        Engines.Run('/ac Absteigen')
 
         local now = os.clock()
         if now - LastStuckCheckTime > 1 then
@@ -1745,7 +1745,7 @@ function Dismount()
                 local nearestFloor = IPC.vnavmesh.PointOnFloor(random, true, 100)
                 if nearestFloor ~= nil then
                     IPC.vnavmesh.PathfindAndMoveTo(nearestFloor, Svc.Condition[CharacterCondition.flying] and SelectedZone.flying)
-                    yield("/wait 1")
+                    yieldd\("/wait 1")
                 end
             end
 
@@ -1753,7 +1753,7 @@ function Dismount()
             LastStuckCheckPosition = Svc.ClientState.LocalPlayer.Position
         end
     elseif Svc.Condition[CharacterCondition.mounted] then
-        yield('/ac Absteigen')
+        Engines.Run('/ac Absteigen')
     end
 end
 
@@ -1769,9 +1769,9 @@ function MiddleOfFateDismount()
             if not (IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning()) then
                 Dalamud.Log("[FATE] MiddleOfFateDismount IPC.vnavmesh.PathfindAndMoveTo")
                 if Svc.Condition[CharacterCondition.flying] then
-                    yield("/vnav flytarget")
+                    Engines.Run("/vnav flytarget")
                 else
-                    yield("/vnav movetarget")
+                    Engines.Run("/vnav movetarget")
                 end
             end
         else
@@ -1779,7 +1779,7 @@ function MiddleOfFateDismount()
                 Dalamud.Log("[FATE] MiddleOfFateDismount Dismount()")
                 Dismount()
             else
-                yield("/vnav stop")
+                Engines.Run("/vnav stop")
                 State = CharacterState.doFate
                 Dalamud.Log("[FATE] State Change: DoFate")
             end
@@ -1809,10 +1809,10 @@ end
 
 --Paths to the Fate NPC Starter
 function MoveToNPC()
-    yield("/target "..CurrentFate.npcName)
+    Engines.Run("/target "..CurrentFate.npcName)
     if Svc.Targets.Target ~= nil and GetTargetName()==CurrentFate.npcName then
         if GetDistanceToTarget() > 5 then
-            yield("/vnav movetarget")
+            Engines.Run("/vnav movetarget")
         end
     end
 end
@@ -1828,7 +1828,7 @@ function MoveToFate()
 
     if CurrentFate~=nil and not IsFateActive(CurrentFate.fateObject) then
         Dalamud.Log("[FATE] Next Fate is dead, selecting new Fate.")
-        yield("/vnav stop")
+        Engines.Run("/vnav stop")
         State = CharacterState.ready
         Dalamud.Log("[FATE] State Change: Ready")
         return
@@ -1836,12 +1836,12 @@ function MoveToFate()
 
     NextFate = SelectNextFate()
     if NextFate == nil then -- when moving to next fate, CurrentFate == NextFate
-        yield("/vnav stop")
+        Engines.Run("/vnav stop")
         State = CharacterState.ready
         Dalamud.Log("[FATE] State Change: Ready")
         return
     elseif CurrentFate == nil or NextFate.fateId ~= CurrentFate.fateId then
-        yield("/vnav stop")
+        Engines.Run("/vnav stop")
         CurrentFate = NextFate
         SetMapFlag(SelectedZone.zoneId, CurrentFate.position)
         return
@@ -1851,10 +1851,10 @@ function MoveToFate()
     if BossFatesClass ~= nil then
         local currentClass = Player.Job.Id
         if CurrentFate.isBossFate and currentClass ~= BossFatesClass.classId then
-            yield("/gs change "..BossFatesClass.className)
+            Engines.Run("/gs change "..BossFatesClass.className)
             return
         elseif not CurrentFate.isBossFate and currentClass ~= MainClass.classId then
-            yield("/gs change "..MainClass.className)
+            Engines.Run("/gs change "..MainClass.className)
             return
         end
     end
@@ -1863,7 +1863,7 @@ function MoveToFate()
     if GetDistanceToPoint(CurrentFate.position) < 60 then
         if Svc.Targets.Target ~= nil then
             Dalamud.Log("[FATE] Found FATE target, immediate rerouting")
-            yield("/wait 0.1")
+            yieldd\("/wait 0.1")
             MoveToTargetHitbox()
             if (CurrentFate.isOtherNpcFate or CurrentFate.isCollectionsFate) then
                 State = CharacterState.interactWithNpc
@@ -1880,11 +1880,11 @@ function MoveToFate()
             return
         else
             if (CurrentFate.isOtherNpcFate or CurrentFate.isCollectionsFate) and not InActiveFate() then
-                yield("/target "..CurrentFate.npcName)
+                Engines.Run("/target "..CurrentFate.npcName)
             else
                 AttemptToTargetClosestFateEnemy()
             end
-            yield("/wait 0.5") -- give it a moment to make sure the target sticks
+            yieldd\("/wait 0.5") -- give it a moment to make sure the target sticks
             return
         end
     end
@@ -1895,8 +1895,8 @@ function MoveToFate()
         if now - LastStuckCheckTime > 10 then
 
             if GetDistanceToPoint(LastStuckCheckPosition) < 3 then
-                yield("/vnav stop")
-                yield("/wait 1")
+                Engines.Run("/vnav stop")
+                yieldd\("/wait 1")
                 Dalamud.Log("[FATE] Antistuck")
                 local up10 = Svc.ClientState.LocalPlayer.Position + Vector3(0, 10, 0)
                 IPC.vnavmesh.PathfindAndMoveTo(up10, Svc.Condition[CharacterCondition.flying] and SelectedZone.flying) -- fly up 10 then try again
@@ -1912,7 +1912,7 @@ function MoveToFate()
         Dalamud.Log("[FATE] Moving to fate #"..CurrentFate.fateId.." "..CurrentFate.fateName)
         MovingAnnouncementLock = true
         if Echo == "All" then
-            yield("/echo [FATE] Moving to fate #"..CurrentFate.fateId.." "..CurrentFate.fateName)
+            Engines.Run("/echo [FATE] Moving to fate #"..CurrentFate.fateId.." "..CurrentFate.fateName)
         end
     end
 
@@ -1933,9 +1933,9 @@ function MoveToFate()
             return
         elseif not IPC.vnavmesh.PathfindInProgress() and not IPC.vnavmesh.IsRunning() then
             if Player.CanFly and SelectedZone.flying then
-                yield("/vnav flyflag")
+                Engines.Run("/vnav flyflag")
             else
-                yield("/vnav moveflag")
+                Engines.Run("/vnav moveflag")
             end
         end
     else
@@ -1945,22 +1945,22 @@ end
 
 function InteractWithFateNpc()
     if InActiveFate() or CurrentFate.startTime > 0 then
-        yield("/vnav stop")
+        Engines.Run("/vnav stop")
         State = CharacterState.doFate
         Dalamud.Log("[FATE] State Change: DoFate")
-        yield("/wait 1") -- give the fate a second to register before dofate and lsync
+        yieldd\("/wait 1") -- give the fate a second to register before dofate and lsync
     elseif not IsFateActive(CurrentFate.fateObject) then
         State = CharacterState.ready
         Dalamud.Log("[FATE] State Change: Ready")
     elseif IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() then
         if Svc.Targets.Target ~= nil and GetTargetName() == CurrentFate.npcName and GetDistanceToTarget() < (5*math.random()) then
-            yield("/vnav stop")
+            Engines.Run("/vnav stop")
         end
         return
     else
         -- if target is already selected earlier during pathing, avoids having to target and move again
         if (Svc.Targets.Target == nil or GetTargetName()~=CurrentFate.npcName) then
-            yield("/target "..CurrentFate.npcName)
+            Engines.Run("/target "..CurrentFate.npcName)
             return
         end
 
@@ -1978,7 +1978,7 @@ function InteractWithFateNpc()
         if Addons.GetAddon("SelectYesno").Ready then
             AcceptNPCFateOrRejectOtherYesno()
         elseif not Svc.Condition[CharacterCondition.occupied] then
-            yield("/interact")
+            Engines.Run("/interact")
         end
     end
 end
@@ -1995,8 +1995,8 @@ function CollectionsFateTurnIn()
 
     if (Svc.Targets.Target == nil or GetTargetName()~=CurrentFate.npcName) then
         TurnOffCombatMods()
-        yield("/target "..CurrentFate.npcName)
-        yield("/wait 1")
+        Engines.Run("/target "..CurrentFate.npcName)
+        yieldd\("/wait 1")
 
         -- if too far from npc to target, then head towards center of fate
         if (Svc.Targets.Target == nil or GetTargetName()~=CurrentFate.npcName and CurrentFate.fateObject.Progress ~= nil and CurrentFate.fateObject.Progress < 100) then
@@ -2004,7 +2004,7 @@ function CollectionsFateTurnIn()
                 IPC.vnavmesh.PathfindAndMoveTo(CurrentFate.position, false)
             end
         else
-            yield("/vnav stop")
+            Engines.Run("/vnav stop")
         end
         return
     end
@@ -2018,9 +2018,9 @@ function CollectionsFateTurnIn()
             GotCollectionsFullCredit = true
         end
 
-        yield("/vnav stop")
-        yield("/interact")
-        yield("/wait 3")
+        Engines.Run("/vnav stop")
+        Engines.Run("/interact")
+        yieldd\("/wait 3")
 
         if CurrentFate.fateObject.Progress < 100 then
             TurnOnCombatMods()
@@ -2036,7 +2036,7 @@ function CollectionsFateTurnIn()
         if CurrentFate ~=nil and CurrentFate.npcName ~=nil and GetTargetName() == CurrentFate.npcName then
             Dalamud.Log("[FATE] Attempting to clear target.")
             ClearTarget()
-            yield("/wait 1")
+            yieldd\("/wait 1")
         end
     end
 end
@@ -2069,9 +2069,9 @@ function SummonChocobo()
 
     if ShouldSummonChocobo and GetBuddyTimeRemaining() <= ResummonChocoboTimeLeft then
         if Inventory.GetItemCount(4868) > 0 then
-            yield("/item Gizar-Blatt")
-            yield("/wait 3")
-            yield('/cac "'..ChocoboStance..'"')
+            Engines.Run("/item Gizar-Blatt")
+            yieldd\("/wait 3")
+            Engines.Run('/cac "'..ChocoboStance..'"')
         elseif ShouldAutoBuyGysahlGreens then
             State = CharacterState.autoBuyGysahlGreens
             Dalamud.Log("[FATE] State Change: AutoBuyGysahlGreens")
@@ -2085,9 +2085,9 @@ end
 function AutoBuyGysahlGreens()
     if Inventory.GetItemCount(4868) > 0 then -- don't need to buy
         if Addons.GetAddon("Shop").Ready then
-            yield("/callback Shop true -1")
+            Engines.Run("/callback Shop true -1")
         elseif Svc.ClientState.TerritoryType == SelectedZone.zoneId then
-            yield("/item Gizar-Blatt")
+            Engines.Run("/item Gizar-Blatt")
         else
             State = CharacterState.ready
             Dalamud.Log("State Change: ready")
@@ -2095,7 +2095,7 @@ function AutoBuyGysahlGreens()
         return
     else
         if Svc.ClientState.TerritoryType ~=  129 then
-            yield("/vnav stop")
+            Engines.Run("/vnav stop")
             TeleportTo("Untere Decks")
             return
         else
@@ -2105,23 +2105,23 @@ function AutoBuyGysahlGreens()
                     IPC.vnavmesh.PathfindAndMoveTo(gysahlGreensVendor.position, false)
                 end
             elseif Svc.Targets.Target ~= nil and GetTargetName() == gysahlGreensVendor.npcName then
-                yield("/vnav stop")
+                Engines.Run("/vnav stop")
                 if Addons.GetAddon("SelectYesno").Ready then
-                    yield("/callback SelectYesno true 0")
+                    Engines.Run("/callback SelectYesno true 0")
                 elseif Addons.GetAddon("SelectIconString").Ready then
-                    yield("/callback SelectIconString true 0")
+                    Engines.Run("/callback SelectIconString true 0")
                     return
                 elseif Addons.GetAddon("Shop").Ready then
-                    yield("/callback Shop true 0 2 99")
+                    Engines.Run("/callback Shop true 0 2 99")
                     return
                 elseif not Svc.Condition[CharacterCondition.occupied] then
-                    yield("/interact")
-                    yield("/wait 1")
+                    Engines.Run("/interact")
+                    yieldd\("/wait 1")
                     return
                 end
             else
-                yield("/vnav stop")
-                yield("/target "..gysahlGreensVendor.npcName)
+                Engines.Run("/vnav stop")
+                Engines.Run("/target "..gysahlGreensVendor.npcName)
             end
         end
     end
@@ -2150,21 +2150,21 @@ end
 function TurnOnAoes()
     if not AoesOn then
         if RotationPlugin == "RSR" then
-            yield("/rotation off")
-            yield("/rotation auto on")
+            Engines.Run("/rotation off")
+            Engines.Run("/rotation auto on")
             Dalamud.Log("[FATE] TurnOnAoes /rotation auto on")
 
             if RSRAoeType == "Off" then
-                yield("/rotation settings aoetype 0")
+                Engines.Run("/rotation settings aoetype 0")
             elseif RSRAoeType == "Cleave" then
-                yield("/rotation settings aoetype 1")
+                Engines.Run("/rotation settings aoetype 1")
             elseif RSRAoeType == "Full" then
-                yield("/rotation settings aoetype 2")
+                Engines.Run("/rotation settings aoetype 2")
             end
         elseif RotationPlugin == "BMR" then
-            yield("/bmrai setpresetname "..RotationAoePreset)
+            Engines.Run("/bmrai setpresetname "..RotationAoePreset)
         elseif RotationPlugin == "VBM" then
-            yield("/vbm ar toggle "..RotationAoePreset)
+            Engines.Run("/vbm ar toggle "..RotationAoePreset)
         end
         AoesOn = true
     end
@@ -2173,13 +2173,13 @@ end
 function TurnOffAoes()
     if AoesOn then
         if RotationPlugin == "RSR" then
-            yield("/rotation settings aoetype 1")
-            yield("/rotation manual")
+            Engines.Run("/rotation settings aoetype 1")
+            Engines.Run("/rotation manual")
             Dalamud.Log("[FATE] TurnOffAoes /rotation manual")
         elseif RotationPlugin == "BMR" then
-            yield("/bmrai setpresetname "..RotationSingleTargetPreset)
+            Engines.Run("/bmrai setpresetname "..RotationSingleTargetPreset)
         elseif RotationPlugin == "VBM" then
-            yield("/vbm ar toggle "..RotationSingleTargetPreset)
+            Engines.Run("/vbm ar toggle "..RotationSingleTargetPreset)
         end
         AoesOn = false
     end
@@ -2188,9 +2188,9 @@ end
 function TurnOffRaidBuffs()
     if AoesOn then
         if RotationPlugin == "BMR" then
-            yield("/bmrai setpresetname "..RotationHoldBuffPreset)
+            Engines.Run("/bmrai setpresetname "..RotationHoldBuffPreset)
         elseif RotationPlugin == "VBM" then
-            yield("/vbm ar toggle "..RotationHoldBuffPreset)
+            Engines.Run("/vbm ar toggle "..RotationHoldBuffPreset)
         end
     end
 end
@@ -2212,38 +2212,38 @@ function TurnOnCombatMods(rotationMode)
         -- turn on RSR in case you have the RSR 30 second out of combat timer set
         if RotationPlugin == "RSR" then
             if rotationMode == "manual" then
-                yield("/rotation manual")
+                Engines.Run("/rotation manual")
                 Dalamud.Log("[FATE] TurnOnCombatMods /rotation manual")
             else
-                yield("/rotation off")
-                yield("/rotation auto on")
+                Engines.Run("/rotation off")
+                Engines.Run("/rotation auto on")
                 Dalamud.Log("[FATE] TurnOnCombatMods /rotation auto on")
             end
         elseif RotationPlugin == "BMR" then
-            yield("/bmrai setpresetname "..RotationAoePreset)
+            Engines.Run("/bmrai setpresetname "..RotationAoePreset)
         elseif RotationPlugin == "VBM" then
-            yield("/vbm ar toggle "..RotationAoePreset)
+            Engines.Run("/vbm ar toggle "..RotationAoePreset)
         elseif RotationPlugin == "Wrath" then
-            yield("/wrath auto on")
+            yieldd\("/wrath auto on")
         end
         
         if not AiDodgingOn then
             SetMaxDistance()
             
             if DodgingPlugin == "BMR" then
-                yield("/bmrai on")
-                yield("/bmrai followtarget on") -- overrides navmesh path and runs into walls sometimes
-                yield("/bmrai followcombat on")
-                -- yield("/bmrai followoutofcombat on")
-                yield("/bmrai maxdistancetarget " .. MaxDistance)
+                Engines.Run("/bmrai on")
+                Engines.Run("/bmrai followtarget on") -- overrides navmesh path and runs into walls sometimes
+                Engines.Run("/bmrai followcombat on")
+                -- Engines.Run("/bmrai followoutofcombat on")
+                Engines.Run("/bmrai maxdistancetarget " .. MaxDistance)
             elseif DodgingPlugin == "VBM" then
-                yield("/vbmai on")
-                yield("/vbmai followtarget on") -- overrides navmesh path and runs into walls sometimes
-                yield("/vbmai followcombat on")
-                -- yield("/bmrai followoutofcombat on")
-                yield("/vbmai maxdistancetarget " .. MaxDistance)
+                Engines.Run("/vbmai on")
+                Engines.Run("/vbmai followtarget on") -- overrides navmesh path and runs into walls sometimes
+                Engines.Run("/vbmai followcombat on")
+                -- Engines.Run("/bmrai followoutofcombat on")
+                Engines.Run("/vbmai maxdistancetarget " .. MaxDistance)
                 if RotationPlugin ~= "VBM" then
-                    yield("/vbmai ForbidActions on") --This Disables VBM AI Auto-Target
+                    Engines.Run("/vbmai ForbidActions on") --This Disables VBM AI Auto-Target
                 end
             end
             AiDodgingOn = true
@@ -2257,29 +2257,29 @@ function TurnOffCombatMods()
         CombatModsOn = false
 
         if RotationPlugin == "RSR" then
-            yield("/rotation off")
+            Engines.Run("/rotation off")
             Dalamud.Log("[FATE] TurnOffCombatMods /rotation off")
         elseif RotationPlugin == "BMR" or RotationPlugin == "VBM" then
-            yield("/bmrai setpresetname nil")
+            Engines.Run("/bmrai setpresetname nil")
         elseif RotationPlugin == "Wrath" then
-            yield("/wrath auto off")
+            yieldd\("/wrath auto off")
         end
 
         -- turn off BMR so you don't start following other mobs
         if AiDodgingOn then
             if DodgingPlugin == "BMR" then
-                yield("/bmrai off")
-                yield("/bmrai followtarget off")
-                yield("/bmrai followcombat off")
-                yield("/bmrai followoutofcombat off")
+                Engines.Run("/bmrai off")
+                Engines.Run("/bmrai followtarget off")
+                Engines.Run("/bmrai followcombat off")
+                Engines.Run("/bmrai followoutofcombat off")
             elseif DodgingPlugin == "VBM" then
-                yield("/vbm ar disable")
-                yield("/vbmai off")
-                yield("/vbmai followtarget off")
-                yield("/vbmai followcombat off")
-                yield("/vbmai followoutofcombat off")
+                Engines.Run("/vbm ar disable")
+                Engines.Run("/vbmai off")
+                Engines.Run("/vbmai followtarget off")
+                Engines.Run("/vbmai followcombat off")
+                Engines.Run("/vbmai followoutofcombat off")
                 if RotationPlugin ~= "VBM" then
-                    yield("/vbmai ForbidActions off") --This Enables VBM AI Auto-Target
+                    Engines.Run("/vbmai ForbidActions off") --This Enables VBM AI Auto-Target
                 end
             end
             AiDodgingOn = false
@@ -2297,13 +2297,13 @@ function HandleUnexpectedCombat()
         Dalamud.Log("[FATE] State Change: DoFate")
         return
     elseif not Svc.Condition[CharacterCondition.inCombat] then
-        yield("/vnav stop")
+        Engines.Run("/vnav stop")
         ClearTarget()
         TurnOffCombatMods()
         State = CharacterState.ready
         Dalamud.Log("[FATE] State Change: Ready")
         local randomWait = (math.floor(math.random()*MaxWait * 1000)/1000) + MinWait -- truncated to 3 decimal places
-        yield("/wait "..randomWait)
+        yieldd\("/wait "..randomWait)
         return
     end
 
@@ -2311,13 +2311,13 @@ function HandleUnexpectedCombat()
     --     if not (IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning()) then
     --         IPC.vnavmesh.PathfindAndMoveTo(Svc.ClientState.Location, true)
     --     end
-    --     yield("/wait 10")
+    --     yieldd\("/wait 10")
     --     return
     -- end
 
     -- targets whatever is trying to kill you
     if Svc.Targets.Target == nil then
-        yield("/battletarget")
+        Engines.Run("/battletarget")
     end
 
     -- pathfind closer if enemies are too far
@@ -2325,26 +2325,26 @@ function HandleUnexpectedCombat()
         if GetDistanceToTargetFlat() > (MaxDistance + GetTargetHitboxRadius() + GetPlayerHitboxRadius()) then
             if not (IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning()) then
                 if Player.CanFly and SelectedZone.flying then
-                    yield("/vnav flytarget")
+                    Engines.Run("/vnav flytarget")
                 else
                     MoveToTargetHitbox()
                 end
             end
         else
             if IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() then
-                yield("/vnav stop")
+                Engines.Run("/vnav stop")
             elseif not Svc.Condition[CharacterCondition.inCombat] then
                 --inch closer 3 seconds
                 if Svc.Condition[CharacterCondition.flying] and SelectedZone.flying then
-                    yield("/vnav flytarget")
+                    Engines.Run("/vnav flytarget")
                 else
                     MoveToTargetHitbox()
                 end
-                yield("/wait 3")
+                yieldd\("/wait 3")
             end
         end
     end
-    yield("/wait 1")
+    yieldd\("/wait 1")
 end
 
 
@@ -2359,25 +2359,25 @@ function DoFate()
     -- switch classes (mostly for continutation fates that pop you directly into the next one)
     if CurrentFate.isBossFate and BossFatesClass ~= nil and currentClass ~= BossFatesClass.classId and not Player.IsBusy then
         TurnOffCombatMods()
-        yield("/gs change "..BossFatesClass.className)
-        yield("/wait 1")
+        Engines.Run("/gs change "..BossFatesClass.className)
+        yieldd\("/wait 1")
         return
     elseif not CurrentFate.isBossFate and BossFatesClass ~= nil and currentClass ~= MainClass.classId and not Player.IsBusy then
         TurnOffCombatMods()
-        yield("/gs change "..MainClass.className)
-        yield("/wait 1")
+        Engines.Run("/gs change "..MainClass.className)
+        yieldd\("/wait 1")
         return
     elseif InActiveFate() and (CurrentFate.fateObject.MaxLevel < Player.Job.Level) and not Player.IsLevelSynced then
-        yield("/lsync")
-        yield("/wait 0.5") -- give it a second to register
+        Engines.Run("/lsync")
+        yieldd\("/wait 0.5") -- give it a second to register
     elseif IsFateActive(CurrentFate.fateObject) and not InActiveFate() and CurrentFate.fateObject.Progress ~= nil and CurrentFate.fateObject.Progress < 100 and (GetDistanceToPoint(CurrentFate.position) < CurrentFate.fateObject.Radius + 10) and not Svc.Condition[CharacterCondition.mounted] and not (IPC.vnavmesh.IsRunning() or IPC.vnavmesh.PathfindInProgress()) then -- got pushed out of fate. go back
-        yield("/vnav stop")
-        yield("/wait 1")
+        Engines.Run("/vnav stop")
+        yieldd\("/wait 1")
         Dalamud.Log("[FATE] pushed out of fate going back!")
         IPC.vnavmesh.PathfindAndMoveTo(CurrentFate.position, Svc.Condition[CharacterCondition.flying] and SelectedZone.flying)
         return
     elseif not IsFateActive(CurrentFate.fateObject) or CurrentFate.fateObject.Progress == 100 then
-        yield("/vnav stop")
+        Engines.Run("/vnav stop")
         ClearTarget()
         if not Dalamud.Log("[FATE] HasContintuation check") and CurrentFate.hasContinuation then
             LastFateEndTime = os.clock()
@@ -2388,7 +2388,7 @@ function DoFate()
             DidFate = true
             Dalamud.Log("[FATE] No continuation for "..CurrentFate.fateName)
             local randomWait = (math.floor(math.random() * (math.max(0, MaxWait - 3)) * 1000)/1000) + MinWait -- truncated to 3 decimal places
-            yield("/wait "..randomWait)
+            yieldd\("/wait "..randomWait)
             TurnOffCombatMods()
             State = CharacterState.ready
             Dalamud.Log("[FATE] State Change: Ready")
@@ -2399,9 +2399,9 @@ function DoFate()
         Dalamud.Log("[FATE] State Change: MiddleOfFateDismount")
         return
     elseif CurrentFate.isCollectionsFate then
-        yield("/wait 1") -- needs a moment after start of fate for GetFateEventItem to populate
+        yieldd\("/wait 1") -- needs a moment after start of fate for GetFateEventItem to populate
         if Inventory.GetItemCount(CurrentFate.fateObject.EventItem) >= 7 or (GotCollectionsFullCredit and CurrentFate.fateObject.Progress == 100) then
-            yield("/vnav stop")
+            Engines.Run("/vnav stop")
             State = CharacterState.collectionsFateTurnIn
             Dalamud.Log("[FATE] State Change: CollectionsFatesTurnIn")
         end
@@ -2413,7 +2413,7 @@ function DoFate()
     if CurrentFate.npcName ~=nil and GetTargetName() == CurrentFate.npcName then
         Dalamud.Log("[FATE] Attempting to clear target.")
         ClearTarget()
-        yield("/wait 1")
+        yieldd\("/wait 1")
     end
 
     TurnOnCombatMods("auto")
@@ -2422,9 +2422,9 @@ function DoFate()
 
     -- switches to targeting forlorns for bonus (if present)
     if not IgnoreForlorns then
-        yield("/target Forlorn Maiden")
+        Engines.Run("/target Forlorn Maiden")
         if not IgnoreBigForlornOnly then
-            yield("/target The Forlorn")
+            Engines.Run("/target The Forlorn")
         end
     end
 
@@ -2433,9 +2433,9 @@ function DoFate()
             ClearTarget()
         elseif not Svc.Targets.Target.IsDead then
             if not ForlornMarked then
-                yield("/mark attack1")
+                Engines.Run("/mark attack1")
                 if Echo == "All" then
-                    yield("/echo Found Forlorn! <se.3>")
+                    Engines.Run("/echo Found Forlorn! <se.3>")
                 end
                 TurnOffAoes()
                 ForlornMarked = true
@@ -2450,7 +2450,7 @@ function DoFate()
 
     -- targets whatever is trying to kill you
     if Entity.Target == nil then
-        yield("/battletarget")
+        Engines.Run("/battletarget")
     end
 
     -- clears target
@@ -2473,14 +2473,14 @@ function DoFate()
         if Svc.Targets.Target ~= nil then
             if GetDistanceToTargetFlat() <= (MaxDistance + GetTargetHitboxRadius() + GetPlayerHitboxRadius()) then
                 if IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() then
-                    yield("/vnav stop")
-                    yield("/wait 5.002") -- wait 5s before inching any closer
+                    Engines.Run("/vnav stop")
+                    yieldd\("/wait 5.002") -- wait 5s before inching any closer
                 elseif (GetDistanceToTargetFlat() > (1 + GetTargetHitboxRadius() + GetPlayerHitboxRadius())) and not Svc.Condition[CharacterCondition.casting] then -- never move into hitbox
-                    yield("/vnav movetarget")
-                    yield("/wait 1") -- inch closer by 1s
+                    Engines.Run("/vnav movetarget")
+                    yieldd\("/wait 1") -- inch closer by 1s
                 end
             elseif not (IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning()) then
-                yield("/wait 5.003") -- give 5s for enemy AoE casts to go off before attempting to move closer
+                yieldd\("/wait 5.003") -- give 5s for enemy AoE casts to go off before attempting to move closer
                 if (Svc.Targets.Target ~= nil and not Svc.Condition[CharacterCondition.inCombat]) and not Svc.Condition[CharacterCondition.casting] then
                     MoveToTargetHitbox()
                 end
@@ -2488,7 +2488,7 @@ function DoFate()
             return
         else
             AttemptToTargetClosestFateEnemy()
-            yield("/wait 1") -- wait in case target doesn't stick
+            yieldd\("/wait 1") -- wait in case target doesn't stick
             if (Svc.Targets.Target == nil) and not Svc.Condition[CharacterCondition.casting] then
                 IPC.vnavmesh.PathfindAndMoveTo(CurrentFate.position, false)
             end
@@ -2496,14 +2496,14 @@ function DoFate()
     else
         if Svc.Targets.Target ~= nil and (GetDistanceToTargetFlat() <= (MaxDistance + GetTargetHitboxRadius() + GetPlayerHitboxRadius())) then
             if IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() then
-                yield("/vnav stop")
+                Engines.Run("/vnav stop")
             end
         elseif not CurrentFate.isBossFate then
             if not (IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning()) then
-                yield("/wait 5.004")
+                yieldd\("/wait 5.004")
                 if Svc.Targets.Target ~= nil and not Svc.Condition[CharacterCondition.casting] then
                     if Svc.Condition[CharacterCondition.flying] and SelectedZone.flying then
-                        yield("/vnav flytarget")
+                        Engines.Run("/vnav flytarget")
                     else
                         MoveToTargetHitbox()
                     end
@@ -2561,7 +2561,7 @@ function Ready()
             State = CharacterState.flyBackToAetheryte
             Dalamud.Log("[FATE] State Change: FlyBackToAetheryte")
         else
-            yield("/wait 10")
+            yieldd\("/wait 10")
         end
         return
     elseif not Dalamud.Log("[FATE] Ready -> ExchangingVouchers") and
@@ -2608,7 +2608,7 @@ function Ready()
             if not Svc.Condition[CharacterCondition.mounted] then
                 Mount()
             end
-            yield("/wait 10")
+            yieldd\("/wait 10")
         end
         return
     elseif CompanionScriptMode and DidFate and not shouldWaitForBonusBuff then
@@ -2628,9 +2628,9 @@ function Ready()
     if not GemAnnouncementLock and (Echo == "All" or Echo == "Gems") then
         GemAnnouncementLock = true
         if BicolorGemCount >= 1400 then
-            yield("/echo [FATE] You're almost capped with "..tostring(BicolorGemCount).."/1500 gems! <se.3>")
+            Engines.Run("/echo [FATE] You're almost capped with "..tostring(BicolorGemCount).."/1500 gems! <se.3>")
         else
-            yield("/echo [FATE] Gems: "..tostring(BicolorGemCount).."/1500")
+            Engines.Run("/echo [FATE] Gems: "..tostring(BicolorGemCount).."/1500")
         end
     end
 end
@@ -2644,7 +2644,7 @@ function HandleDeath()
     end
 
     if IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() then
-        yield("/vnav stop")
+        Engines.Run("/vnav stop")
     end
 
     if Svc.Condition[CharacterCondition.dead] then --Condition Dead
@@ -2652,22 +2652,22 @@ function HandleDeath()
             if Echo and not DeathAnnouncementLock then
                 DeathAnnouncementLock = true
                 if Echo == "All" then
-                    yield("/echo [FATE] You have died. Returning to home aetheryte.")
+                    Engines.Run("/echo [FATE] You have died. Returning to home aetheryte.")
                 end
             end
 
             if Addons.GetAddon("SelectYesno").Ready then --rez addon yes
-                yield("/callback SelectYesno true 0")
-                yield("/wait 0.1")
+                Engines.Run("/callback SelectYesno true 0")
+                yieldd\("/wait 0.1")
             end
         else
             if Echo and not DeathAnnouncementLock then
                 DeathAnnouncementLock = true
                 if Echo == "All" then
-                    yield("/echo [FATE] You have died. Waiting until script detects you're alive again...")
+                    Engines.Run("/echo [FATE] You have died. Waiting until script detects you're alive again...")
                 end
             end
-            yield("/wait 1")
+            yieldd\("/wait 1")
         end
     else
         State = CharacterState.ready
@@ -2681,12 +2681,12 @@ function ExecuteBicolorExchange()
 
     if BicolorGemCount >= 1400 then
         if Addons.GetAddon("SelectYesno").Ready then
-            yield("/callback SelectYesno true 0")
+            Engines.Run("/callback SelectYesno true 0")
             return
         end
 
         if Addons.GetAddon("ShopExchangeCurrency").Ready then
-            yield("/callback ShopExchangeCurrency false 0 "..SelectedBicolorExchangeData.item.itemIndex.." "..(BicolorGemCount//SelectedBicolorExchangeData.item.price))
+            Engines.Run("/callback ShopExchangeCurrency false 0 "..SelectedBicolorExchangeData.item.itemIndex.." "..(BicolorGemCount//SelectedBicolorExchangeData.item.price))
             return
         end
 
@@ -2698,12 +2698,12 @@ function ExecuteBicolorExchange()
         if SelectedBicolorExchangeData.miniAethernet ~= nil and
             GetDistanceToPoint(SelectedBicolorExchangeData.position) > (DistanceBetween(SelectedBicolorExchangeData.miniAethernet.position, SelectedBicolorExchangeData.position) + 10) then
             Dalamud.Log("Distance to shopkeep is too far. Using mini aetheryte.")
-            yield("/li "..SelectedBicolorExchangeData.miniAethernet.name)
-            yield("/wait 1") -- give it a moment to register
+            Engines.Run("/li "..SelectedBicolorExchangeData.miniAethernet.name)
+            yieldd\("/wait 1") -- give it a moment to register
             return
         elseif Addons.GetAddon("TelepotTown").Ready then
             Dalamud.Log("TelepotTown open")
-            yield("/callback TelepotTown false -1")
+            Engines.Run("/callback TelepotTown false -1")
         elseif GetDistanceToPoint(SelectedBicolorExchangeData.position) > 5 then
             Dalamud.Log("Distance to shopkeep is too far. Walking there.")
             if not (IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning()) then
@@ -2713,23 +2713,23 @@ function ExecuteBicolorExchange()
         else
             Dalamud.Log("[FATE] Arrived at Shopkeep")
             if IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning() then
-                yield("/vnav stop")
+                Engines.Run("/vnav stop")
             end
     
             if Svc.Targets.Target == nil or GetTargetName() ~= SelectedBicolorExchangeData.shopKeepName then
-                yield("/target "..SelectedBicolorExchangeData.shopKeepName)
+                Engines.Run("/target "..SelectedBicolorExchangeData.shopKeepName)
             elseif not Svc.Condition[CharacterCondition.occupiedInQuestEvent] then
-                yield("/interact")
+                Engines.Run("/interact")
             end
         end
     else
         if Addons.GetAddon("ShopExchangeCurrency").Ready then
             Dalamud.Log("[FATE] Attemping to close shop window")
-            yield("/callback ShopExchangeCurrency true -1")
+            Engines.Run("/callback ShopExchangeCurrency true -1")
             return
         elseif Svc.Condition[CharacterCondition.occupiedInEvent] then
             Dalamud.Log("[FATE] Character still occupied talking to shopkeeper")
-            yield("/wait 0.5")
+            yieldd\("/wait 0.5")
             return
         end
 
@@ -2750,7 +2750,7 @@ function ProcessRetainers()
         end
 
         if Svc.ClientState.TerritoryType ~=  129 then
-            yield("/vnav stop")
+            Engines.Run("/vnav stop")
             TeleportTo("Untere Decks")
             return
         end
@@ -2765,23 +2765,23 @@ function ProcessRetainers()
         end
 
         if Svc.Targets.Target == nil or GetTargetName() ~= summoningBell.name then
-            yield("/target "..summoningBell.name)
+            Engines.Run("/target "..summoningBell.name)
             return
         end
 
         if not Svc.Condition[CharacterCondition.occupiedSummoningBell] then
-            yield("/interact")
+            Engines.Run("/interact")
             if Addons.GetAddon("RetainerList").Ready then
-                yield("/ays e")
+                Engines.Run("/ays e")
                 if Echo == "All" then
-                    yield("/echo [FATE] Processing retainers")
+                    Engines.Run("/echo [FATE] Processing retainers")
                 end
-                yield("/wait 1")
+                yieldd\("/wait 1")
             end
         end
     else
         if Addons.GetAddon("RetainerList").Ready then
-            yield("/callback RetainerList true -1")
+            Engines.Run("/callback RetainerList true -1")
         elseif not Svc.Condition[CharacterCondition.occupiedSummoningBell] then
             State = CharacterState.ready
             Dalamud.Log("[FATE] State Change: Ready")
@@ -2797,12 +2797,12 @@ function GrandCompanyTurnIn()
             130 --"Ul'dah - Steps of Nald"
         }
         if Svc.ClientState.TerritoryType ~=  gcZoneIds[Player.GrandCompany] then
-            yield("/li gc")
-            yield("/wait 1")
+            Engines.Run("/li gc")
+            yieldd\("/wait 1")
         elseif IPC.Deliveroo.IsTurnInRunning() then
             return
         else
-            yield("/deliveroo enable")
+            Engines.Run("/deliveroo enable")
         end
     else
         State = CharacterState.ready
@@ -2813,15 +2813,15 @@ end
 function Repair()
     local needsRepair = Inventory.GetItemsInNeedOfRepairs(RemainingDurabilityToRepair)
     if Addons.GetAddon("SelectYesno").Ready then
-        yield("/callback SelectYesno true 0")
+        Engines.Run("/callback SelectYesno true 0")
         return
     end
 
     if Addons.GetAddon("Repair").Ready then
         if needsRepair.Count == nil or needsRepair.Count == 0 then
-            yield("/callback Repair true -1") -- if you don't need repair anymore, close the menu
+            Engines.Run("/callback Repair true -1") -- if you don't need repair anymore, close the menu
         else
-            yield("/callback Repair true 0") -- select repair
+            Engines.Run("/callback Repair true 0") -- select repair
         end
         return
     end
@@ -2829,7 +2829,7 @@ function Repair()
     -- if occupied by repair, then just wait
     if Svc.Condition[CharacterCondition.occupiedMateriaExtractionAndRepair] then
         Dalamud.Log("[FATE] Repairing...")
-        yield("/wait 1")
+        yieldd\("/wait 1")
         return
     end
 
@@ -2837,7 +2837,7 @@ function Repair()
     if SelfRepair then
         if Inventory.GetItemCount(33916) > 0 then
             if Addons.GetAddon("Shop").Ready then
-                yield("/callback Shop true -1")
+                Engines.Run("/callback Shop true -1")
                 return
             end
 
@@ -2855,7 +2855,7 @@ function Repair()
             if needsRepair.Count > 0 then
                 if not Addons.GetAddon("Repair").Ready then
                     Dalamud.Log("[FATE] Opening repair menu...")
-                    yield("/generalaction reparatur")
+                    Engines.Run("/generalaction reparatur")
                 end
             else
                 State = CharacterState.ready
@@ -2864,7 +2864,7 @@ function Repair()
         elseif ShouldAutoBuyDarkMatter then
             if Svc.ClientState.TerritoryType ~=  129 then
                 if Echo == "All" then
-                    yield("/echo Out of Dark Matter! Purchasing more from Limsa Lominsa.")
+                    Engines.Run("/echo Out of Dark Matter! Purchasing more from Limsa Lominsa.")
                 end
                 TeleportTo("Limsa Lominsa Lower Decks")
                 return
@@ -2872,28 +2872,28 @@ function Repair()
 
             local darkMatterVendor = { npcName="Unsynrael", x=-257.71, y=16.19, z=50.11, wait=0.08 }
             if GetDistanceToPoint(darkMatterVendor.position) > (DistanceBetween(hawkersAlleyAethernetShard.position, darkMatterVendor.position) + 10) then
-                yield("/li Hawkers' Alley")
-                yield("/wait 1") -- give it a moment to register
+                Engines.Run("/li Hawkers' Alley")
+                yieldd\("/wait 1") -- give it a moment to register
             elseif Addons.GetAddon("TelepotTown").Ready then
-                yield("/callback TelepotTown false -1")
+                Engines.Run("/callback TelepotTown false -1")
             elseif GetDistanceToPoint(darkMatterVendor.position) > 5 then
                 if not (IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning()) then
                     IPC.vnavmesh.PathfindAndMoveTo(darkMatterVendor.position, false)
                 end
             else
                 if Svc.Targets.Target == nil or GetTargetName() ~= darkMatterVendor.npcName then
-                    yield("/target "..darkMatterVendor.npcName)
+                    Engines.Run("/target "..darkMatterVendor.npcName)
                 elseif not Svc.Condition[CharacterCondition.occupiedInQuestEvent] then
-                    yield("/interact")
+                    Engines.Run("/interact")
                 elseif Addons.GetAddon("SelectYesno").Ready then
-                    yield("/callback SelectYesno true 0")
+                    Engines.Run("/callback SelectYesno true 0")
                 elseif Addons.GetAddon("Shop") then
-                    yield("/callback Shop true 0 40 99")
+                    Engines.Run("/callback Shop true 0 40 99")
                 end
             end
         else
             if Echo == "All" then
-                yield("/echo Out of Dark Matter and ShouldAutoBuyDarkMatter is false. Switching to Limsa mender.")
+                Engines.Run("/echo Out of Dark Matter and ShouldAutoBuyDarkMatter is false. Switching to Limsa mender.")
             end
             SelfRepair = false
         end
@@ -2906,19 +2906,19 @@ function Repair()
             
             local mender = { npcName="Alistair", x=-246.87, y=16.19, z=49.83 }
             if GetDistanceToPoint(mender.position) > (DistanceBetween(hawkersAlleyAethernetShard.position, mender.position) + 10) then
-                yield("/li Hawkers' Alley")
-                yield("/wait 1") -- give it a moment to register
+                Engines.Run("/li Hawkers' Alley")
+                yieldd\("/wait 1") -- give it a moment to register
             elseif Addons.GetAddon("TelepotTown").Ready then
-                yield("/callback TelepotTown false -1")
+                Engines.Run("/callback TelepotTown false -1")
             elseif GetDistanceToPoint(mender.position) > 5 then
                 if not (IPC.vnavmesh.PathfindInProgress() or IPC.vnavmesh.IsRunning()) then
                     IPC.vnavmesh.PathfindAndMoveTo(mender.position, false)
                 end
             else
                 if Svc.Targets.Target == nil or GetTargetName() ~= mender.npcName then
-                    yield("/target "..mender.npcName)
+                    Engines.Run("/target "..mender.npcName)
                 elseif not Svc.Condition[CharacterCondition.occupiedInQuestEvent] then
-                    yield("/interact")
+                    Engines.Run("/interact")
                 end
             end
         else
@@ -2941,20 +2941,20 @@ function ExtractMateria()
 
     if Inventory.GetSpiritbondedItems().Count > 0 and Inventory.GetFreeInventorySlots() > 1 then
         if not Addons.GetAddon("Materialize").Ready then
-            yield("/generalaction Materia-Extraktion")
+            Engines.Run("/generalaction Materia-Extraktion")
             return
         end
 
         Dalamud.Log("[FATE] Extracting materia...")
             
         if Addons.GetAddon("MaterializeDialog").Ready then
-            yield("/callback MaterializeDialog true 0")
+            Engines.Run("/callback MaterializeDialog true 0")
         else
-            yield("/callback Materialize true 2 0")
+            Engines.Run("/callback Materialize true 2 0")
         end
     else
         if Addons.GetAddon("Materialize").Ready then
-            yield("/callback Materialize true -1")
+            Engines.Run("/callback Materialize true -1")
         else
             State = CharacterState.ready
             Dalamud.Log("[FATE] State Change: Ready")
@@ -2986,21 +2986,21 @@ end
 function FoodCheck()
     --food usage
     if not HasStatusId(48) and Food ~= "" then
-        yield("/item " .. Food)
+        Engines.Run("/item " .. Food)
     end
 end
 
 function PotionCheck()
     --pot usage
     if not HasStatusId(49) and Potion ~= "" then
-        yield("/item " .. Potion)
+        Engines.Run("/item " .. Potion)
     end
 end
 
 function GetNodeText(addonName, nodePath, ...)
     local addon = Addons.GetAddon(addonName)
     repeat
-        yield("/wait 0.1")
+        yieldd\("/wait 0.1")
     until addon.Ready
     return addon:GetNode(nodePath, ...).Text
 end
@@ -3168,21 +3168,21 @@ end
 
 -- Final warning if no dodging plugin is active
 if DodgingPlugin == "None" then
-    yield("/echo [FATE] Warning: you do not have an AI dodging plugin configured, so your character will stand in AOEs. Please install either Veyn's BossMod or BossMod Reborn")
+    Engines.Run("/echo [FATE] Warning: you do not have an AI dodging plugin configured, so your character will stand in AOEs. Please install either Veyn's BossMod or BossMod Reborn")
 end
 
 if Retainers and not HasPlugin("AutoRetainer") then
     Retainers = false
-    yield("/echo [FATE] Warning: you have enabled the feature to process retainers, but you do not have AutoRetainer installed.")
+    Engines.Run("/echo [FATE] Warning: you have enabled the feature to process retainers, but you do not have AutoRetainer installed.")
 end
 
 if ShouldGrandCompanyTurnIn and not HasPlugin("Deliveroo") then
     ShouldGrandCompanyTurnIn = false
-    yield("/echo [FATE] Warning: you have enabled the feature to process GC turn ins, but you do not have Deliveroo installed.")
+    Engines.Run("/echo [FATE] Warning: you have enabled the feature to process GC turn ins, but you do not have Deliveroo installed.")
 end
 
 if not CompanionScriptMode then
-    yield("/at y")
+    Engines.Run("/at y")
 end
 
 StopScript = false
@@ -3209,7 +3209,7 @@ SetMaxDistance()
 
 SelectedZone = SelectNextZone()
 if SelectedZone.zoneName ~= "" and Echo == "All" then
-    yield("/echo [FATE] Farming "..SelectedZone.zoneName)
+    Engines.Run("/echo [FATE] Farming "..SelectedZone.zoneName)
 end
 Dalamud.Log("[FATE] Farming Start for "..SelectedZone.zoneName)
 
@@ -3230,7 +3230,7 @@ if ShouldExchangeBicolorGemstones ~= false then
         end
     end
     if SelectedBicolorExchangeData == nil then
-        yield("/echo [FATE] Cannot recognize bicolor shop item "..ItemToPurchase.."! Please make sure it's in the BicolorExchangeData table!")
+        Engines.Run("/echo [FATE] Cannot recognize bicolor shop item "..ItemToPurchase.."! Please make sure it's in the BicolorExchangeData table!")
         StopScript = true
     end
 end
@@ -3242,16 +3242,16 @@ if InActiveFate() then
 end
 
 if ShouldSummonChocobo and GetBuddyTimeRemaining() > 0 then
-    yield('/cac "'..ChocoboStance..'"')
+    Engines.Run('/cac "'..ChocoboStance..'"')
 end
 
 while not StopScript do
     local nearestFate = Fates.GetNearestFate()
     if not IPC.vnavmesh.IsReady() then
-        yield("/echo [FATE] Waiting for vnavmesh to build...")
+        Engines.Run("/echo [FATE] Waiting for vnavmesh to build...")
         Dalamud.Log("[FATE] Waiting for vnavmesh to build...")
         repeat
-            yield("/wait 1")
+            yieldd\("/wait 1")
         until IPC.vnavmesh.IsReady()
     end
     if State ~= CharacterState.dead and Svc.Condition[CharacterCondition.dead] then
@@ -3284,11 +3284,11 @@ while not StopScript do
         end
         State()
     end
-    yield("/wait 0.1")
+    yieldd\("/wait 0.1")
 end
-yield("/vnav stop")
+Engines.Run("/vnav stop")
 
 if Player.Job.Id ~= MainClass.Id then
-    yield("/gs change "..MainClass.Name)
+    Engines.Run("/gs change "..MainClass.Name)
 end
 --#endregion Main
