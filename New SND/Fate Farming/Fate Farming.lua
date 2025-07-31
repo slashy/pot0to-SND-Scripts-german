@@ -1522,10 +1522,15 @@ end
 
 function TeleportTo(aetheryteName)
     AcceptTeleportOfferLocation(aetheryteName)
+    local start = os.clock()
 
     while EorzeaTimeToUnixTime(Instances.Framework.EorzeaTime) - LastTeleportTimeStamp < 5 do
         Dalamud.Log("[FATE] Too soon since last teleport. Waiting...")
         yield("/wait 5.001")
+        if os.clock() - start > 30 then
+            Engines.Run("/echo  [FATE] Teleport failed: Timeout waiting before cast.")
+            return false
+        end
     end
 
     Engines.Run("/li tp "..aetheryteName)
@@ -1533,14 +1538,23 @@ function TeleportTo(aetheryteName)
     while Svc.Condition[CharacterCondition.casting] do
         Dalamud.Log("[FATE] Casting teleport...")
         yield("/wait 1")
+        if os.clock() - start > 60 then
+            Engines.Run("/echo  [FATE] Teleport failed: Timeout during cast.")
+            return false
+        end
     end
     yield("/wait 1") -- wait for that microsecond in between the cast finishing and the transition beginning
     while Svc.Condition[CharacterCondition.betweenAreas] do
         Dalamud.Log("[FATE] Teleporting...")
         yield("/wait 1")
+        if os.clock() - start > 120 then
+            Engines.Run("/echo  [FATE] Teleport failed: Timeout during zone transition.")
+            return false
+        end
     end
     yield("/wait 1")
     LastTeleportTimeStamp = EorzeaTimeToUnixTime(Instances.Framework.EorzeaTime)
+    return true
 end
 
 function ChangeInstance()
@@ -1829,6 +1843,7 @@ function MoveToFate()
     if CurrentFate~=nil and not IsFateActive(CurrentFate.fateObject) then
         Dalamud.Log("[FATE] Next Fate is dead, selecting new Fate.")
         Engines.Run("/vnav stop")
+        MovingAnnouncementLock = false
         State = CharacterState.ready
         Dalamud.Log("[FATE] State Change: Ready")
         return
@@ -1837,6 +1852,7 @@ function MoveToFate()
     NextFate = SelectNextFate()
     if NextFate == nil then -- when moving to next fate, CurrentFate == NextFate
         Engines.Run("/vnav stop")
+        MovingAnnouncementLock = false
         State = CharacterState.ready
         Dalamud.Log("[FATE] State Change: Ready")
         return
@@ -2028,6 +2044,7 @@ function CollectionsFateTurnIn()
             Dalamud.Log("[FATE] State Change: DoFate")
         else
             if GotCollectionsFullCredit then
+                GotCollectionsFullCredit = false           
                 State = CharacterState.unexpectedCombat
                 Dalamud.Log("[FATE] State Change: UnexpectedCombat")
             end
@@ -2039,6 +2056,7 @@ function CollectionsFateTurnIn()
             yield("/wait 1")
         end
     end
+    GotCollectionsFullCredit = false
 end
 
 --#endregion
@@ -2196,13 +2214,13 @@ function TurnOffRaidBuffs()
 end
 
 function SetMaxDistance()
-    --ranged and casters have a further max distance so not always running all way up to target
-    if not Player.Job.IsMeleeDPS or not Player.Job.IsTank then
-        MaxDistance = RangedDist
-        Dalamud.Log("[FATE] Setting max distance to "..RangedDist)
+    -- Check if the current job is a melee DPS or tank.
+    if Player.Job and (Player.Job.IsMeleeDPS or Player.Job.IsTank) then
+        MaxDistance = MeleeDist
+        Dalamud.Log("[FATE] Setting max distance to " .. tostring(MeleeDist) .. " (melee/tank)")
     else
-        MaxDistance = MeleeDist --default to melee distance
-        Dalamud.Log("[FATE] Setting max distance to "..MeleeDist)
+        MaxDistance = RangedDist
+        Dalamud.Log("[FATE] Setting max distance to " .. tostring(RangedDist) .. " (ranged/caster)")
     end
 end
 
@@ -2288,6 +2306,11 @@ function TurnOffCombatMods()
 end
 
 function HandleUnexpectedCombat()
+    if Svc.Condition[CharacterCondition.mounted] or Svc.Condition[CharacterCondition.flying] then
+        Dalamud.Log("[FATE] UnexpectedCombat: Dismounting due to combat")
+        Dismount()
+        return
+    end
     TurnOnCombatMods("manual")
 
     local nearestFate = Fates.GetNearestFate()
@@ -2390,6 +2413,8 @@ function DoFate()
             local randomWait = (math.floor(math.random() * (math.max(0, MaxWait - 3)) * 1000)/1000) + MinWait -- truncated to 3 decimal places
             yield("/wait "..randomWait)
             TurnOffCombatMods()
+            ForlornMarked = false
+            MovingAnnouncementLock = false
             State = CharacterState.ready
             Dalamud.Log("[FATE] State Change: Ready")
         end
